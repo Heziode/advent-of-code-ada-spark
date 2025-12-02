@@ -13,3 +13,9 @@ tags = ["advent-of-code", "spark", "puzzles", "2025"]
 
 [[depends-on]]
 gnat = ">=12"
+
+[[depends-on]]
+resources = "~0.1.0"
+
+[[depends-on]]
+gnatprove = "^15.1.0"
