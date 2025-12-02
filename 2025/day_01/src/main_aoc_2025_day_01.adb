@@ -4,16 +4,16 @@
 --  SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
 
---  Main: AoC_2025_Day_02 Runner
+--  Main: AoC_2025_Day_01 Runner
 --
---  Purpose: Execute and display Day 02 puzzle solutions
+--  Purpose: Execute and display Day 01 puzzle solutions
 
 pragma Ada_2022;
 
 with Ada.Text_IO;
-with AoC_2025_Day_02;
+with AoC_2025_Day_01;
 
-procedure Main with SPARK_Mode => On is
+procedure Main_AoC_2025_Day_01 with SPARK_Mode => On is
    use Ada.Text_IO;
 
    --  Trim leading spaces from a string
@@ -38,18 +38,18 @@ procedure Main with SPARK_Mode => On is
    end Trim_Left;
 
 begin
-   Put_Line ("Advent of Code 2025 - Day 02 (example)");
+   Put_Line ("Advent of Code 2025 - Day 01 (example)");
    Put_Line ("======================================");
    New_Line;
 
-   Put_Line ("Part 1: " & Trim_Left (AoC_2025_Day_02.Solve_Part_1));
-   Put_Line ("Part 2: " & Trim_Left (AoC_2025_Day_02.Solve_Part_2));
+   Put_Line ("Part 1: " & Trim_Left (AoC_2025_Day_01.Solve_Part_1));
+   Put_Line ("Part 2: " & Trim_Left (AoC_2025_Day_01.Solve_Part_2));
    New_Line;
 
-   Put_Line ("Advent of Code 2025 - Day 02");
+   Put_Line ("Advent of Code 2025 - Day 01");
    Put_Line ("============================");
    New_Line;
 
-   Put_Line ("Part 1: " & Trim_Left (AoC_2025_Day_02.Solve_Part_1 ("input.txt")));
-   Put_Line ("Part 2: " & Trim_Left (AoC_2025_Day_02.Solve_Part_2 ("input.txt")));
-end Main;
+   Put_Line ("Part 1: " & Trim_Left (AoC_2025_Day_01.Solve_Part_1 ("input.txt")));
+   Put_Line ("Part 2: " & Trim_Left (AoC_2025_Day_01.Solve_Part_2 ("input.txt")));
+end Main_AoC_2025_Day_01;

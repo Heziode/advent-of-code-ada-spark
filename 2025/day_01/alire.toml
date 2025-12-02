@@ -7,7 +7,7 @@ maintainers-logins = ["Heziode"]
 licenses = "MIT"
 tags = ["advent-of-code", "spark", "puzzles", "2025", "day01"]
 
-executables = ["main"]
+executables = ["main_aoc_2025_day_01"]
 
 [build-switches]
 "*".style_checks = ["-gnatyy", "-gnatyM120", "-gnatw.X"]

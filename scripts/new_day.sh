@@ -159,6 +159,8 @@ tags = ["advent-of-code", "spark", "puzzles", "$YEAR"]
 
 [[depends-on]]
 gnat = ">=12"
+resources = "~0.1.0"
+gnatprove = "^15.1.0"
 EOF
     info "Created $YEAR_DIR/alire.toml"
 
@@ -216,7 +218,7 @@ maintainers-logins = ["Heziode"]
 licenses = "MIT"
 tags = ["advent-of-code", "spark", "puzzles", "$YEAR", "day$DAY_PADDED"]
 
-executables = ["main"]
+executables = ["main_${PKG_NAME_LOWER}"]
 
 [build-switches]
 "*".style_checks = ["-gnatyy", "-gnatyM120", "-gnatw.X"]
@@ -225,12 +227,10 @@ executables = ["main"]
 [[depends-on]]
 gnat = ">=12"
 resources = "*"
+gnatprove = "^15.1.0"
 
 [[pins]]
 aoc_common = { path = "../../src/aoc_common" }
-
-[[depends-on]]
-gnatprove = "^15.1.0"
 EOF
 info "Created alire.toml"
 
@@ -260,7 +260,7 @@ project $PKG_NAME is
    for Source_Dirs use ("src", "config");
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
-   for Main use ("main.adb");
+   for Main use ("main_${PKG_NAME_LOWER}.adb");
 
    package Compiler is
       for Default_Switches ("Ada") use (
@@ -415,10 +415,10 @@ EOF
 info "Created ${PKG_NAME_LOWER}.adb"
 
 #-------------------------------------------------------------------------------
-# Create main.adb
+# Create main_${PKG_NAME_LOWER}.adb
 #-------------------------------------------------------------------------------
 
-cat > "$DAY_DIR/src/main.adb" << EOF
+cat > "$DAY_DIR/src/main_${PKG_NAME_LOWER}.adb" << EOF
 --------------------------------------------------------------------------------
 --  Advent of Code - SPARK-verified puzzle solutions
 --  Copyright (c) $YEAR Heziode
@@ -474,7 +474,7 @@ begin
    Put_Line ("Part 2: " & Trim_Left (${PKG_NAME}.Solve_Part_2 ("input.txt")));
 end Main;
 EOF
-info "Created main.adb"
+info "Created main_${PKG_NAME_LOWER}.adb"
 
 #-------------------------------------------------------------------------------
 # Create input files
@@ -518,7 +518,7 @@ TODO: Describe Part 2.
 alr build
 
 # Run
-./bin/main
+./bin/main_${PKG_NAME_LOWER}
 \`\`\`
 EOF
 info "Created README.md"
@@ -590,6 +590,6 @@ echo "  1. cd $DAY_DIR"
 echo "  2. Add puzzle input to share/$CRATE_NAME/example.txt and input.txt"
 echo "  3. Implement Solve_Part_1 and Solve_Part_2 in src/${PKG_NAME_LOWER}.adb"
 echo "  4. Build with: alr build"
-echo "  5. Run with: ./bin/main"
+echo "  5. Run with: ./bin/main_${PKG_NAME_LOWER}"
 echo "  6. Verify with: alr exec -- gnatprove -P ${PKG_NAME_LOWER}.gpr --mode=silver"
 echo ""
