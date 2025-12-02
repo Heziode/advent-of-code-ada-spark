@@ -1,0 +1,16 @@
+name = "aoc_common"
+description = "Shared SPARK-verified utilities for Advent of Code"
+version = "0.1.0-dev"
+authors = ["Heziode"]
+maintainers = ["Heziode <heziode@users.noreply.github.com>"]
+maintainers-logins = ["Heziode"]
+licenses = "MIT"
+tags = ["advent-of-code", "spark", "utilities"]
+
+[build-switches]
+"*".style_checks = ["-gnatyy", "-gnatyM120", "-gnatw.X"]
+"*".ada_version = ["-gnat2022"]
+
+[[depends-on]]
+gnat = ">=12"
+gnatprove = "^15.1.0"

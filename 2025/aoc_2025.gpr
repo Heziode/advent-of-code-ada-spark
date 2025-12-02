@@ -1,0 +1,23 @@
+--------------------------------------------------------------------------------
+--  Advent of Code - SPARK-verified puzzle solutions
+--  Copyright (c) 2025 Heziode
+--  SPDX-License-Identifier: MIT
+--------------------------------------------------------------------------------
+
+--  Project: AoC_2025 (Aggregate)
+--
+--  Purpose: Aggregate project for all 2025 Advent of Code days
+--
+--  Usage: alr build (builds all days in 2025)
+
+aggregate project AoC_2025 is
+
+   for Project_Files use (
+      "day_01/aoc_2025_day_01.gpr"
+      --  Add more days here as they are implemented:
+      --  "day_02/aoc_2025_day_02.gpr",
+      --  "day_03/aoc_2025_day_03.gpr",
+      --  etc.
+   );
+
+end AoC_2025;
