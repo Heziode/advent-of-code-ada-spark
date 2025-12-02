@@ -290,6 +290,15 @@ project $PKG_NAME is
       for Artifacts (".") use ("share");
    end Install;
 
+   package Format is
+      for Width ("Ada") use "119";
+      for Charset ("Ada") use "utf-8";
+   end Format;
+
+   package Documentation is
+      for Style use "leading";
+   end Documentation;
+
 end $PKG_NAME;
 EOF
 info "Created ${PKG_NAME_LOWER}.gpr"
