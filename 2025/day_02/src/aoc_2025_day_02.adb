@@ -28,7 +28,9 @@ with AoC_Common.File_IO;
 with Resources;
 with Aoc_2025_Day_02_Config;
 
-package body AoC_2025_Day_02 with SPARK_Mode => Off is
+package body AoC_2025_Day_02
+  with SPARK_Mode => Off
+is
 
    ---------------------------------------------------------------------------
    --  Resource Path Helper
@@ -44,16 +46,16 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
    type Power_10_Array is array (0 .. MAX_DIGITS / 2) of Long_Long_Integer;
 
    Powers_Of_10 : constant Power_10_Array :=
-      [0  => 1,
-       1  => 10,
-       2  => 100,
-       3  => 1_000,
-       4  => 10_000,
-       5  => 100_000,
-       6  => 1_000_000,
-       7  => 10_000_000,
-       8  => 100_000_000,
-       9  => 1_000_000_000];
+     [0 => 1,
+      1 => 10,
+      2 => 100,
+      3 => 1_000,
+      4 => 10_000,
+      5 => 100_000,
+      6 => 1_000_000,
+      7 => 10_000_000,
+      8 => 100_000_000,
+      9 => 1_000_000_000];
 
    ---------------------------------------------------------------------------
    --  Digit_Count Implementation
@@ -84,10 +86,10 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
    ---------------------------------------------------------------------------
 
    function Is_Double_Pattern (N : Product_ID) return Boolean is
-      Num_Digits : Positive;
+      Num_Digits  : Positive;
       Half_Digits : Positive;
-      Divisor : Product_ID;
-      First_Half : Product_ID;
+      Divisor     : Product_ID;
+      First_Half  : Product_ID;
       Second_Half : Product_ID;
    begin
       if N < 11 then
@@ -124,10 +126,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
    --  Make_Double_Pattern: Create double pattern from half-value
    ---------------------------------------------------------------------------
 
-   function Make_Double_Pattern
-      (Half_Value  : Product_ID;
-       Half_Digits : Positive) return Product_ID
-   is
+   function Make_Double_Pattern (Half_Value : Product_ID; Half_Digits : Positive) return Product_ID is
    begin
       return Half_Value * Powers_Of_10 (Half_Digits) + Half_Value;
    end Make_Double_Pattern;
@@ -136,17 +135,13 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
    --  Next_Double_Pattern Implementation
    ---------------------------------------------------------------------------
 
-   function Next_Double_Pattern
-      (Start   : Product_ID;
-       End_Val : Product_ID) return Product_ID
-   is
+   function Next_Double_Pattern (Start : Product_ID; End_Val : Product_ID) return Product_ID is
    begin
       --  Iterate through possible half-digit counts (1 to MAX_DIGITS/2)
       for Half_Digits in 1 .. MAX_DIGITS / 2 loop
          declare
             --  Range of half-values for this digit count
-            Min_Half : constant Product_ID :=
-               (if Half_Digits = 1 then 1 else Powers_Of_10 (Half_Digits - 1));
+            Min_Half : constant Product_ID := (if Half_Digits = 1 then 1 else Powers_Of_10 (Half_Digits - 1));
             Max_Half : constant Product_ID := Powers_Of_10 (Half_Digits) - 1;
 
             --  Find the range of half-values that produce doubles in [Start, End_Val]
@@ -166,8 +161,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
             --  Find first half-value whose double >= Start
             for Half in Min_Half .. Max_Half loop
                declare
-                  Double_Val : constant Product_ID :=
-                     Make_Double_Pattern (Half, Half_Digits);
+                  Double_Val : constant Product_ID := Make_Double_Pattern (Half, Half_Digits);
                begin
                   if Double_Val >= Start and then Double_Val <= End_Val then
                      return Double_Val;
@@ -175,6 +169,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
 
                   if Double_Val > End_Val then
                      exit;  --  No more in this digit count
+
                   end if;
                end;
             end loop;
@@ -190,10 +185,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
    --  Sum_Double_Patterns_In_Range: Efficient enumeration (Part 1)
    ---------------------------------------------------------------------------
 
-   function Sum_Double_Patterns_In_Range
-      (Range_Start : Product_ID;
-       Range_End   : Product_ID) return Long_Long_Integer
-   is
+   function Sum_Double_Patterns_In_Range (Range_Start : Product_ID; Range_End : Product_ID) return Long_Long_Integer is
       Total : Long_Long_Integer := 0;
    begin
       if Range_Start > Range_End then
@@ -203,8 +195,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
       --  Iterate through possible half-digit counts
       for Half_Digits in 1 .. MAX_DIGITS / 2 loop
          declare
-            Min_Half : constant Product_ID :=
-               (if Half_Digits = 1 then 1 else Powers_Of_10 (Half_Digits - 1));
+            Min_Half : constant Product_ID := (if Half_Digits = 1 then 1 else Powers_Of_10 (Half_Digits - 1));
             Max_Half : constant Product_ID := Powers_Of_10 (Half_Digits) - 1;
 
             Min_Double : constant Product_ID := Make_Double_Pattern (Min_Half, Half_Digits);
@@ -243,10 +234,10 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
                   --  = (10^k + 1) * (a + a+1 + ... + b)
                   --  = (10^k + 1) * (b - a + 1) * (a + b) / 2
                   declare
-                     Count : constant Long_Long_Integer :=
-                        Long_Long_Integer (Actual_Max_Half - Actual_Min_Half + 1);
+                     Count      : constant Long_Long_Integer :=
+                       Long_Long_Integer (Actual_Max_Half - Actual_Min_Half + 1);
                      Sum_Halves : constant Long_Long_Integer :=
-                        Count * Long_Long_Integer (Actual_Min_Half + Actual_Max_Half) / 2;
+                       Count * Long_Long_Integer (Actual_Min_Half + Actual_Max_Half) / 2;
                   begin
                      Total := Total + Long_Long_Integer (Multiplier) * Sum_Halves;
                   end;
@@ -269,6 +260,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
    begin
       if N < 11 then
          return False;  --  Need at least 2 digits
+
       end if;
 
       Num_Digits := Digit_Count (N);
@@ -278,11 +270,11 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
       for Base_Len in 1 .. Num_Digits / 2 loop
          if Num_Digits mod Base_Len = 0 then
             declare
-               K : constant Positive := Num_Digits / Base_Len;  --  Number of repetitions
-               Divisor : Long_Long_Integer := 1;
-               Base_Pattern : Product_ID;
+               K             : constant Positive := Num_Digits / Base_Len;  --  Number of repetitions
+               Divisor       : Long_Long_Integer := 1;
+               Base_Pattern  : Product_ID;
                Reconstructed : Long_Long_Integer;
-               Multiplier : Long_Long_Integer;
+               Multiplier    : Long_Long_Integer;
             begin
                --  Calculate 10^Base_Len
                for I in 1 .. Base_Len loop
@@ -340,12 +332,12 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
       for Sub_Len in 1 .. Base_Len / 2 loop
          if Base_Len mod Sub_Len = 0 then
             declare
-               K : constant Positive := Base_Len / Sub_Len;
-               Divisor : Long_Long_Integer := 1;
-               Sub_Pattern : Product_ID;
+               K             : constant Positive := Base_Len / Sub_Len;
+               Divisor       : Long_Long_Integer := 1;
+               Sub_Pattern   : Product_ID;
                Reconstructed : Long_Long_Integer;
-               Multiplier : Long_Long_Integer;
-               Shift : Long_Long_Integer := 1;
+               Multiplier    : Long_Long_Integer;
+               Shift         : Long_Long_Integer := 1;
             begin
                for I in 1 .. Sub_Len loop
                   Divisor := Divisor * 10;
@@ -367,6 +359,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
 
                if Reconstructed = Long_Long_Integer (Base) then
                   return False;  --  Base is itself a repeated pattern
+
                end if;
             end;
          end if;
@@ -375,14 +368,10 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
       return True;
    end Is_Primitive_Base;
 
-   function Make_Repeated_Pattern
-      (Base     : Product_ID;
-       Base_Len : Positive;
-       K        : Positive) return Long_Long_Integer
-   is
-      Result : Long_Long_Integer := 0;
+   function Make_Repeated_Pattern (Base : Product_ID; Base_Len : Positive; K : Positive) return Long_Long_Integer is
+      Result     : Long_Long_Integer := 0;
       Multiplier : Long_Long_Integer := 1;
-      Divisor : Long_Long_Integer := 1;
+      Divisor    : Long_Long_Integer := 1;
    begin
       for I in 1 .. Base_Len loop
          Divisor := Divisor * 10;
@@ -398,11 +387,9 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
       return Result;
    end Make_Repeated_Pattern;
 
-   function Sum_Repeated_Patterns_In_Range
-      (Range_Start : Product_ID;
-       Range_End   : Product_ID) return Long_Long_Integer
+   function Sum_Repeated_Patterns_In_Range (Range_Start : Product_ID; Range_End : Product_ID) return Long_Long_Integer
    is
-      Total : Long_Long_Integer := 0;
+      Total      : Long_Long_Integer := 0;
       End_Digits : Positive;
    begin
       if Range_Start > Range_End then
@@ -411,6 +398,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
 
       if Range_End < 11 then
          return 0;  --  No repeated patterns below 11
+
       end if;
 
       End_Digits := Digit_Count (Range_End);
@@ -418,8 +406,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
       --  For each base length (1 to 9 for 18-digit max)
       for Base_Len in 1 .. MAX_DIGITS / 2 loop
          declare
-            Min_Base : constant Product_ID :=
-               (if Base_Len = 1 then 1 else Product_ID (Powers_Of_10 (Base_Len - 1)));
+            Min_Base : constant Product_ID := (if Base_Len = 1 then 1 else Product_ID (Powers_Of_10 (Base_Len - 1)));
             Max_Base : constant Product_ID := Product_ID (Powers_Of_10 (Base_Len) - 1);
          begin
             --  For each number of repetitions K >= 2
@@ -430,6 +417,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
                   --  Skip if total digits exceed our range
                   if Total_Digits > End_Digits + 1 then
                      exit;  --  No need to try more K values
+
                   end if;
 
                   --  Enumerate all bases
@@ -437,11 +425,10 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
                      --  Only count if base is primitive (not itself a repeated pattern)
                      if Is_Primitive_Base (Base, Base_Len) then
                         declare
-                           Pattern : constant Long_Long_Integer :=
-                              Make_Repeated_Pattern (Base, Base_Len, K);
+                           Pattern : constant Long_Long_Integer := Make_Repeated_Pattern (Base, Base_Len, K);
                         begin
-                           if Pattern >= Long_Long_Integer (Range_Start) and then
-                              Pattern <= Long_Long_Integer (Range_End)
+                           if Pattern >= Long_Long_Integer (Range_Start)
+                             and then Pattern <= Long_Long_Integer (Range_End)
                            then
                               Total := Total + Pattern;
                            end if;
@@ -463,7 +450,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
    --  Parse a Long_Long_Integer from a string (needed for large product IDs)
    function Parse_Product_ID (S : String) return Product_ID is
       use AoC_Common.File_IO;
-      Result : Long_Long_Integer := 0;
+      Result    : Long_Long_Integer := 0;
       Start_Idx : Positive := S'First;
    begin
       --  Skip leading whitespace
@@ -492,30 +479,25 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
    end record;
 
    pragma Warnings (Off, "not dispatching");
-   function State_Invariant (State : Solver_State) return Boolean is
-      (State.Total_Sum >= 0);
+   function State_Invariant (State : Solver_State) return Boolean
+   is (State.Total_Sum >= 0);
    pragma Warnings (On, "not dispatching");
 
-   procedure Process_Input_Line
-      (Line : String;
-       Data : in out Solver_State)
-   is
+   procedure Process_Input_Line (Line : String; Data : in out Solver_State) is
       use AoC_Common.File_IO;
 
-      Pos : Positive := Line'First;
+      Pos             : Positive := Line'First;
       Range_Start_Idx : Positive;
-      Dash_Idx : Natural;
-      Range_End_Idx : Natural;
+      Dash_Idx        : Natural;
+      Range_End_Idx   : Natural;
 
       Range_Start : Product_ID;
-      Range_End : Product_ID;
+      Range_End   : Product_ID;
    begin
       --  Parse format: "start1-end1,start2-end2,..."
       while Pos <= Line'Last loop
          --  Skip any leading whitespace or trailing garbage
-         while Pos <= Line'Last and then
-               (Line (Pos) = ' ' or else Line (Pos) = ASCII.LF or else
-                Line (Pos) = ASCII.CR)
+         while Pos <= Line'Last and then (Line (Pos) = ' ' or else Line (Pos) = ASCII.LF or else Line (Pos) = ASCII.CR)
          loop
             Pos := Pos + 1;
          end loop;
@@ -539,9 +521,10 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
          Range_End_Idx := Pos - 1;
 
          --  Skip trailing whitespace from range
-         while Range_End_Idx >= Range_Start_Idx and then
-               (Line (Range_End_Idx) = ' ' or else Line (Range_End_Idx) = ASCII.LF or else
-                Line (Range_End_Idx) = ASCII.CR)
+         while Range_End_Idx >= Range_Start_Idx
+           and then (Line (Range_End_Idx) = ' '
+                     or else Line (Range_End_Idx) = ASCII.LF
+                     or else Line (Range_End_Idx) = ASCII.CR)
          loop
             Range_End_Idx := Range_End_Idx - 1;
          end loop;
@@ -554,11 +537,10 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
             --  Sum patterns based on part
             case Data.Part is
                when AoC_Common.Part_1 =>
-                  Data.Total_Sum := Data.Total_Sum +
-                     Sum_Double_Patterns_In_Range (Range_Start, Range_End);
+                  Data.Total_Sum := Data.Total_Sum + Sum_Double_Patterns_In_Range (Range_Start, Range_End);
+
                when AoC_Common.Part_2 =>
-                  Data.Total_Sum := Data.Total_Sum +
-                     Sum_Repeated_Patterns_In_Range (Range_Start, Range_End);
+                  Data.Total_Sum := Data.Total_Sum + Sum_Repeated_Patterns_In_Range (Range_Start, Range_End);
             end case;
          end if;
 
@@ -569,11 +551,12 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
       end loop;
    end Process_Input_Line;
 
-   procedure Process_File is new AoC_Common.File_IO.For_Each_Line
-      (Data_Type       => Solver_State,
-       Max_Line_Length => 65536,  --  Input might be one very long line
-       Invariant       => State_Invariant,
-       Process_Line    => Process_Input_Line);
+   procedure Process_File is new
+     AoC_Common.File_IO.For_Each_Line
+       (Data_Type       => Solver_State,
+        Max_Line_Length => 65536,  --  Input might be one very long line
+        Invariant       => State_Invariant,
+        Process_Line    => Process_Input_Line);
 
    ---------------------------------------------------------------------------
    --  Result Formatting
@@ -597,10 +580,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
       State   : Solver_State := (Total_Sum => 0, Part => AoC_Common.Part_1);
       Success : Boolean;
    begin
-      Process_File
-         (Filename => Day_02_Resources.Resource_Path & Filename,
-          Success  => Success,
-          Data     => State);
+      Process_File (Filename => Day_02_Resources.Resource_Path & Filename, Success => Success, Data => State);
 
       if Success then
          return Format_Result (State.Total_Sum);
@@ -618,10 +598,7 @@ package body AoC_2025_Day_02 with SPARK_Mode => Off is
       State   : Solver_State := (Total_Sum => 0, Part => AoC_Common.Part_2);
       Success : Boolean;
    begin
-      Process_File
-         (Filename => Day_02_Resources.Resource_Path & Filename,
-          Success  => Success,
-          Data     => State);
+      Process_File (Filename => Day_02_Resources.Resource_Path & Filename, Success => Success, Data => State);
 
       if Success then
          return Format_Result (State.Total_Sum);

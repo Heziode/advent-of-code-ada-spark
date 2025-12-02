@@ -18,10 +18,7 @@ procedure Main_AoC_2025_Day_02 with SPARK_Mode => On is
 
    --  Trim leading spaces from a string
    --  Returns empty string if input is all spaces or empty
-   function Trim_Left (S : String) return String
-   with
-      Post => Trim_Left'Result'Length <= S'Length
-   is
+   function Trim_Left (S : String) return String with Post => Trim_Left'Result'Length <= S'Length is
    begin
       if S'Length = 0 then
          return "";

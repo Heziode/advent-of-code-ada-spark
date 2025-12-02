@@ -57,9 +57,7 @@ package AoC_Common.Parsing is
    --  @param C A digit character ('0' .. '9')
    --  @return Integer value 0 .. 9
    function Digit_Value (C : Character) return Natural
-   with
-      Pre  => Is_Digit (C),
-      Post => Digit_Value'Result <= 9;
+   with Pre => Is_Digit (C), Post => Digit_Value'Result <= 9;
 
    --  Parse an integer starting at a given position
    --
@@ -69,11 +67,8 @@ package AoC_Common.Parsing is
    --  @param S The string to parse
    --  @param Start Starting index in the string
    --  @return Parse result with value, success flag, and next index
-   function Parse_Integer
-      (S     : String;
-       Start : Positive) return Parse_Result
-   with
-      Pre => S'Length > 0 and then Start >= S'First and then Start <= S'Last;
+   function Parse_Integer (S : String; Start : Positive) return Parse_Result
+   with Pre => S'Length > 0 and then Start >= S'First and then Start <= S'Last;
 
    --  Find and parse the next integer in a string
    --
@@ -83,22 +78,19 @@ package AoC_Common.Parsing is
    --  @param Start Starting index for the search
    --  @return Parse result with value, success flag, and next index
    function Find_Next_Integer
-      (S     : String;
-       Start : Positive) return Parse_Result
-   with
-      Pre => S'Length > 0 and then Start >= S'First and then Start <= S'Last;
+     (S : String; Start : Positive) return Parse_Result
+   with Pre => S'Length > 0 and then Start >= S'First and then Start <= S'Last;
 
    --  Skip whitespace and return index of next non-whitespace character
    --
    --  @param S The string to scan
    --  @param Start Starting index
    --  @return Index of first non-whitespace, or S'Last + 1 if all whitespace
-   function Skip_Whitespace
-      (S     : String;
-       Start : Positive) return Natural
+   function Skip_Whitespace (S : String; Start : Positive) return Natural
    with
-      Pre  => S'Length > 0 and then Start >= S'First and then Start <= S'Last,
-      Post => Skip_Whitespace'Result >= Start and then
-              Skip_Whitespace'Result <= S'Last + 1;
+     Pre => S'Length > 0 and then Start >= S'First and then Start <= S'Last,
+     Post =>
+       Skip_Whitespace'Result >= Start
+       and then Skip_Whitespace'Result <= S'Last + 1;
 
 end AoC_Common.Parsing;

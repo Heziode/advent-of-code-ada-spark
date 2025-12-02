@@ -13,10 +13,7 @@ package body AoC_Common.Parsing is
       return Character'Pos (C) - Character'Pos ('0');
    end Digit_Value;
 
-   function Parse_Integer
-      (S     : String;
-       Start : Positive) return Parse_Result
-   is
+   function Parse_Integer (S : String; Start : Positive) return Parse_Result is
       Idx      : Natural := Start;
       Negative : Boolean := False;
       Value    : Integer := 0;
@@ -64,8 +61,7 @@ package body AoC_Common.Parsing is
    end Parse_Integer;
 
    function Find_Next_Integer
-      (S     : String;
-       Start : Positive) return Parse_Result
+     (S : String; Start : Positive) return Parse_Result
    is
       Idx : Natural := Start;
    begin
@@ -73,7 +69,10 @@ package body AoC_Common.Parsing is
       while Idx <= S'Last loop
          if Is_Digit (S (Idx)) then
             return Parse_Integer (S, Idx);
-         elsif S (Idx) = '-' and then Idx < S'Last and then Is_Digit (S (Idx + 1)) then
+         elsif S (Idx) = '-'
+           and then Idx < S'Last
+           and then Is_Digit (S (Idx + 1))
+         then
             return Parse_Integer (S, Idx);
          end if;
          Idx := Idx + 1;
@@ -82,10 +81,7 @@ package body AoC_Common.Parsing is
       return (Value => 0, Success => False, Next => 0);
    end Find_Next_Integer;
 
-   function Skip_Whitespace
-      (S     : String;
-       Start : Positive) return Natural
-   is
+   function Skip_Whitespace (S : String; Start : Positive) return Natural is
       Idx : Natural := Start;
    begin
       while Idx <= S'Last and then Is_Whitespace (S (Idx)) loop

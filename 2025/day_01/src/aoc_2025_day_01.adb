@@ -27,7 +27,9 @@ with AoC_Common.File_IO;
 with Resources;
 with Aoc_2025_Day_01_Config;
 
-package body AoC_2025_Day_01 with SPARK_Mode => Off is
+package body AoC_2025_Day_01
+  with SPARK_Mode => Off
+is
 
    ---------------------------------------------------------------------------
    --  Resource Path Helper
@@ -39,11 +41,7 @@ package body AoC_2025_Day_01 with SPARK_Mode => Off is
    --  Apply_Rotation Implementation
    ---------------------------------------------------------------------------
 
-   function Apply_Rotation
-      (Position : Dial_Position;
-       Dir      : Direction_Type;
-       Distance : Natural) return Dial_Position
-   is
+   function Apply_Rotation (Position : Dial_Position; Dir : Direction_Type; Distance : Natural) return Dial_Position is
       --  Reduce distance to single rotation (0 to 99)
       Reduced : constant Natural := Distance mod DIAL_SIZE;
       Result  : Integer;
@@ -51,6 +49,7 @@ package body AoC_2025_Day_01 with SPARK_Mode => Off is
       case Dir is
          when Left =>
             Result := Integer (Position) - Reduced;
+
          when Right =>
             Result := Integer (Position) + Reduced;
       end case;
@@ -70,11 +69,7 @@ package body AoC_2025_Day_01 with SPARK_Mode => Off is
    --  Count_Zero_Passes Implementation
    ---------------------------------------------------------------------------
 
-   function Count_Zero_Passes
-      (Start_Pos : Dial_Position;
-       Dir       : Direction_Type;
-       Distance  : Natural) return Natural
-   is
+   function Count_Zero_Passes (Start_Pos : Dial_Position; Dir : Direction_Type; Distance : Natural) return Natural is
    begin
       if Distance = 0 then
          return 0;
@@ -99,8 +94,7 @@ package body AoC_2025_Day_01 with SPARK_Mode => Off is
             --  Moving right (increasing): we hit 0 when (Start_Pos + N) mod 100 = 0
             --  i.e., N mod 100 = (100 - Start_Pos) mod 100
             declare
-               First_Zero : constant Natural :=
-                  (if Start_Pos = 0 then DIAL_SIZE else DIAL_SIZE - Start_Pos);
+               First_Zero : constant Natural := (if Start_Pos = 0 then DIAL_SIZE else DIAL_SIZE - Start_Pos);
             begin
                if Distance >= First_Zero then
                   return (Distance - First_Zero) / DIAL_SIZE + 1;
@@ -122,14 +116,11 @@ package body AoC_2025_Day_01 with SPARK_Mode => Off is
    end record;
 
    pragma Warnings (Off, "not dispatching");
-   function State_Invariant (State : Solver_State) return Boolean is
-      (State.Position'Valid);
+   function State_Invariant (State : Solver_State) return Boolean
+   is (State.Position'Valid);
    pragma Warnings (On, "not dispatching");
 
-   procedure Process_Input_Line
-      (Line : String;
-       Data : in out Solver_State)
-   is
+   procedure Process_Input_Line (Line : String; Data : in out Solver_State) is
       use AoC_Common;
       use AoC_Common.File_IO;
 
@@ -139,19 +130,26 @@ package body AoC_2025_Day_01 with SPARK_Mode => Off is
    begin
       if Line'Length < 2 then
          return;  --  Skip empty or too short lines
+
       end if;
 
       --  Parse direction
       case Line (Line'First) is
-         when 'L' => Dir := Left;
-         when 'R' => Dir := Right;
-         when others => return;  --  Invalid direction
+         when 'L' =>
+            Dir := Left;
+
+         when 'R' =>
+            Dir := Right;
+
+         when others =>
+            return;  --  Invalid direction
       end case;
 
       --  Parse distance (skip the first character)
       Parse_Res := Parse_Natural (Line (Line'First + 1 .. Line'Last));
       if not Parse_Res.Valid then
          return;  --  Invalid number
+
       end if;
       Distance := Parse_Res.Value;
 
@@ -167,18 +165,18 @@ package body AoC_2025_Day_01 with SPARK_Mode => Off is
 
          when Part_2 =>
             --  Count passes through 0
-            Data.Zero_Count := Data.Zero_Count +
-               Count_Zero_Passes (Data.Position, Dir, Distance);
+            Data.Zero_Count := Data.Zero_Count + Count_Zero_Passes (Data.Position, Dir, Distance);
             --  Update position
             Data.Position := Apply_Rotation (Data.Position, Dir, Distance);
       end case;
    end Process_Input_Line;
 
-   procedure Process_File is new AoC_Common.File_IO.For_Each_Line
-      (Data_Type       => Solver_State,
-       Max_Line_Length => 256,
-       Invariant       => State_Invariant,
-       Process_Line    => Process_Input_Line);
+   procedure Process_File is new
+     AoC_Common.File_IO.For_Each_Line
+       (Data_Type       => Solver_State,
+        Max_Line_Length => 256,
+        Invariant       => State_Invariant,
+        Process_Line    => Process_Input_Line);
 
    function Format_Result (N : Natural) return Result_String is
       Result : Result_String := BLANK_RESULT;
@@ -191,14 +189,10 @@ package body AoC_2025_Day_01 with SPARK_Mode => Off is
    end Format_Result;
 
    function Solve_Part_1 (Filename : String := "example.txt") return Result_String is
-      State   : Solver_State := (Position => DIAL_START, Zero_Count => 0,
-                                 Part => AoC_Common.Part_1);
+      State   : Solver_State := (Position => DIAL_START, Zero_Count => 0, Part => AoC_Common.Part_1);
       Success : Boolean;
    begin
-      Process_File
-         (Filename => Day_01_Resources.Resource_Path & Filename,
-          Success  => Success,
-          Data     => State);
+      Process_File (Filename => Day_01_Resources.Resource_Path & Filename, Success => Success, Data => State);
 
       if Success then
          return Format_Result (State.Zero_Count);
@@ -213,14 +207,10 @@ package body AoC_2025_Day_01 with SPARK_Mode => Off is
    end Solve_Part_1;
 
    function Solve_Part_2 (Filename : String := "example.txt") return Result_String is
-      State   : Solver_State := (Position => DIAL_START, Zero_Count => 0,
-                                 Part => AoC_Common.Part_2);
+      State   : Solver_State := (Position => DIAL_START, Zero_Count => 0, Part => AoC_Common.Part_2);
       Success : Boolean;
    begin
-      Process_File
-         (Filename => Day_01_Resources.Resource_Path & Filename,
-          Success  => Success,
-          Data     => State);
+      Process_File (Filename => Day_01_Resources.Resource_Path & Filename, Success => Success, Data => State);
 
       if Success then
          return Format_Result (State.Zero_Count);

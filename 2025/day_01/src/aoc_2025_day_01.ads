@@ -20,13 +20,15 @@
 
 pragma Ada_2022;
 
-package AoC_2025_Day_01 with SPARK_Mode => On is
+package AoC_2025_Day_01
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Dial Configuration
    ---------------------------------------------------------------------------
 
-   DIAL_SIZE  : constant := 100;  --  Positions 0 to 99
+   DIAL_SIZE : constant := 100;  --  Positions 0 to 99
    DIAL_START : constant := 50;   --  Initial position
 
    subtype Dial_Position is Natural range 0 .. DIAL_SIZE - 1;
@@ -52,10 +54,7 @@ package AoC_2025_Day_01 with SPARK_Mode => On is
    --  @param Dir Direction of rotation (Left decreases, Right increases)
    --  @param Distance Number of positions to rotate
    --  @return New dial position after rotation
-   function Apply_Rotation
-      (Position : Dial_Position;
-       Dir      : Direction_Type;
-       Distance : Natural) return Dial_Position;
+   function Apply_Rotation (Position : Dial_Position; Dir : Direction_Type; Distance : Natural) return Dial_Position;
 
    --  Count how many times we pass through or land on 0 during a rotation
    --
@@ -63,10 +62,7 @@ package AoC_2025_Day_01 with SPARK_Mode => On is
    --  @param Dir Direction of rotation
    --  @param Distance Number of positions to rotate
    --  @return Number of times we pass through or land on 0
-   function Count_Zero_Passes
-      (Start_Pos : Dial_Position;
-       Dir       : Direction_Type;
-       Distance  : Natural) return Natural;
+   function Count_Zero_Passes (Start_Pos : Dial_Position; Dir : Direction_Type; Distance : Natural) return Natural;
 
    ---------------------------------------------------------------------------
    --  Puzzle Solvers (File I/O required - not SPARK)

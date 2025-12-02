@@ -10,38 +10,36 @@ pragma Ada_2022;
 
 with Ada.Text_IO;
 
-package body AoC_Common.File_IO with SPARK_Mode => On is
+package body AoC_Common.File_IO
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  String Searching Functions
    ---------------------------------------------------------------------------
 
-   function Find_First
-      (Source  : String;
-       Pattern : Character) return Natural
-   is
+   function Find_First (Source : String; Pattern : Character) return Natural is
    begin
       for I in Source'Range loop
          if Source (I) = Pattern then
             return I;
          end if;
-         pragma Loop_Invariant
-            (for all J in Source'First .. I => Source (J) /= Pattern);
+         pragma
+           Loop_Invariant
+             (for all J in Source'First .. I => Source (J) /= Pattern);
       end loop;
       return 0;
    end Find_First;
 
-   function Find_Last
-      (Source  : String;
-       Pattern : Character) return Natural
-   is
+   function Find_Last (Source : String; Pattern : Character) return Natural is
    begin
       for I in reverse Source'Range loop
          if Source (I) = Pattern then
             return I;
          end if;
-         pragma Loop_Invariant
-            (for all J in I .. Source'Last => Source (J) /= Pattern);
+         pragma
+           Loop_Invariant
+             (for all J in I .. Source'Last => Source (J) /= Pattern);
       end loop;
       return 0;
    end Find_Last;
@@ -107,11 +105,13 @@ package body AoC_Common.File_IO with SPARK_Mode => On is
          Is_Negative := True;
          if Input'Length = 1 then
             return (Valid => False);  --  Just "-" is invalid
+
          end if;
          Start_Idx := Input'First + 1;
       elsif Input (Input'First) = '+' then
          if Input'Length = 1 then
             return (Valid => False);  --  Just "+" is invalid
+
          end if;
          Start_Idx := Input'First + 1;
       else
@@ -147,8 +147,8 @@ package body AoC_Common.File_IO with SPARK_Mode => On is
          if not Is_Whitespace (S (I)) then
             return I;
          end if;
-         pragma Loop_Invariant
-            (for all J in S'First .. I => Is_Whitespace (S (J)));
+         pragma
+           Loop_Invariant (for all J in S'First .. I => Is_Whitespace (S (J)));
       end loop;
       return 0;
    end First_Non_Whitespace;
@@ -159,8 +159,8 @@ package body AoC_Common.File_IO with SPARK_Mode => On is
          if not Is_Whitespace (S (I)) then
             return I;
          end if;
-         pragma Loop_Invariant
-            (for all J in I .. S'Last => Is_Whitespace (S (J)));
+         pragma
+           Loop_Invariant (for all J in I .. S'Last => Is_Whitespace (S (J)));
       end loop;
       return 0;
    end Last_Non_Whitespace;
@@ -170,9 +170,7 @@ package body AoC_Common.File_IO with SPARK_Mode => On is
    ---------------------------------------------------------------------------
 
    procedure For_Each_Line
-      (Filename : String;
-       Success  : out Boolean;
-       Data     : in out Data_Type)
+     (Filename : String; Success : out Boolean; Data : in out Data_Type)
    is
       pragma SPARK_Mode (Off);
 

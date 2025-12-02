@@ -25,10 +25,15 @@ package AoC_Common.Directions is
    type Cardinal_Direction is (North, East, South, West);
 
    --  All eight directions (8-way movement)
-   type Direction is (
-      North, North_East, East, South_East,
-      South, South_West, West, North_West
-   );
+   type Direction is
+     (North,
+      North_East,
+      East,
+      South_East,
+      South,
+      South_West,
+      West,
+      North_West);
 
    --  Movement offset for a single step in a direction
    type Direction_Offset is record
@@ -57,14 +62,16 @@ package AoC_Common.Directions is
    --
    --  @param Dir The starting direction
    --  @return The direction after rotating right
-   function Rotate_Clockwise (Dir : Cardinal_Direction) return Cardinal_Direction
+   function Rotate_Clockwise
+     (Dir : Cardinal_Direction) return Cardinal_Direction
    with Inline;
 
    --  Rotate a cardinal direction 90 degrees counter-clockwise
    --
    --  @param Dir The starting direction
    --  @return The direction after rotating left
-   function Rotate_Counter_Clockwise (Dir : Cardinal_Direction) return Cardinal_Direction
+   function Rotate_Counter_Clockwise
+     (Dir : Cardinal_Direction) return Cardinal_Direction
    with Inline;
 
    --  Get the opposite direction
@@ -79,27 +86,25 @@ package AoC_Common.Directions is
    --  @param Pos The starting position
    --  @param Dir The direction to move
    --  @return New coordinate after moving (may be out of bounds)
-   function Move
-      (Pos : Coordinate;
-       Dir : Cardinal_Direction) return Coordinate
+   function Move (Pos : Coordinate; Dir : Cardinal_Direction) return Coordinate
    with
-      Pre => Pos.Row > Coordinate_Range'First and then
-             Pos.Row < Coordinate_Range'Last and then
-             Pos.Col > Coordinate_Range'First and then
-             Pos.Col < Coordinate_Range'Last;
+     Pre =>
+       Pos.Row > Coordinate_Range'First
+       and then Pos.Row < Coordinate_Range'Last
+       and then Pos.Col > Coordinate_Range'First
+       and then Pos.Col < Coordinate_Range'Last;
 
    --  Move a coordinate one step in any direction (8-way)
    --
    --  @param Pos The starting position
    --  @param Dir The direction to move
    --  @return New coordinate after moving (may be out of bounds)
-   function Move
-      (Pos : Coordinate;
-       Dir : Direction) return Coordinate
+   function Move (Pos : Coordinate; Dir : Direction) return Coordinate
    with
-      Pre => Pos.Row > Coordinate_Range'First and then
-             Pos.Row < Coordinate_Range'Last and then
-             Pos.Col > Coordinate_Range'First and then
-             Pos.Col < Coordinate_Range'Last;
+     Pre =>
+       Pos.Row > Coordinate_Range'First
+       and then Pos.Row < Coordinate_Range'Last
+       and then Pos.Col > Coordinate_Range'First
+       and then Pos.Col < Coordinate_Range'Last;
 
 end AoC_Common.Directions;

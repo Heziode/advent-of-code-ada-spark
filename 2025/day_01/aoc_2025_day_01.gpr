@@ -49,4 +49,13 @@ project AoC_2025_Day_01 is
       for Artifacts (".") use ("share");
    end Install;
 
+   package Format is
+      for Width ("Ada") use "119";
+      for Charset ("Ada") use "utf-8";
+   end Format;
+
+   package Documentation is
+      for Style use "leading";
+   end Documentation;
+
 end AoC_2025_Day_01;

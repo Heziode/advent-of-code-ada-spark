@@ -53,10 +53,11 @@ package AoC_Common is
    --  @param Dims The bounding dimensions
    --  @return True if Pos is within [1..Dims.Rows] x [1..Dims.Cols]
    function Is_Within_Bounds
-      (Pos  : Coordinate;
-       Dims : Dimensions) return Boolean
-   is (Pos.Row >= 1 and then Pos.Row <= Dims.Rows and then
-       Pos.Col >= 1 and then Pos.Col <= Dims.Cols)
+     (Pos : Coordinate; Dims : Dimensions) return Boolean
+   is (Pos.Row >= 1
+       and then Pos.Row <= Dims.Rows
+       and then Pos.Col >= 1
+       and then Pos.Col <= Dims.Cols)
    with Inline;
 
    --  Calculate Manhattan distance between two coordinates
@@ -67,9 +68,7 @@ package AoC_Common is
    --  @param From Starting coordinate
    --  @param To Ending coordinate
    --  @return Manhattan distance (always non-negative)
-   function Manhattan_Distance
-      (From, To : Coordinate) return Natural
-   with
-      Post => Manhattan_Distance'Result <= 4 * MAX_GRID_SIZE;
+   function Manhattan_Distance (From, To : Coordinate) return Natural
+   with Post => Manhattan_Distance'Result <= 4 * MAX_GRID_SIZE;
 
 end AoC_Common;

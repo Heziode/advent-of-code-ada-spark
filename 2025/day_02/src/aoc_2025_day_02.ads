@@ -20,7 +20,9 @@
 
 pragma Ada_2022;
 
-package AoC_2025_Day_02 with SPARK_Mode => On is
+package AoC_2025_Day_02
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Constants
@@ -53,17 +55,14 @@ package AoC_2025_Day_02 with SPARK_Mode => On is
    --  @param N The number to check (must be positive)
    --  @return True if digit count is even
    function Has_Even_Digit_Count (N : Product_ID) return Boolean
-   with
-      Pre => N > 0;
+   with Pre => N > 0;
 
    --  Get the number of digits in a positive number
    --
    --  @param N The number to count digits for
    --  @return Number of digits (1 to MAX_DIGITS)
    function Digit_Count (N : Product_ID) return Positive
-   with
-      Pre  => N > 0,
-      Post => Digit_Count'Result in 1 .. MAX_DIGITS;
+   with Pre => N > 0, Post => Digit_Count'Result in 1 .. MAX_DIGITS;
 
    --  Check if a number is a "double pattern" - its digit sequence repeated twice
    --
@@ -80,15 +79,14 @@ package AoC_2025_Day_02 with SPARK_Mode => On is
    --  @param Start Minimum value to search from
    --  @param End_Val Maximum value to search up to
    --  @return Next double pattern, or 0 if none found
-   function Next_Double_Pattern
-      (Start   : Product_ID;
-       End_Val : Product_ID) return Product_ID
+   function Next_Double_Pattern (Start : Product_ID; End_Val : Product_ID) return Product_ID
    with
-      Pre  => Start <= End_Val,
-      Post => Next_Double_Pattern'Result = 0 or else
-              (Next_Double_Pattern'Result >= Start and then
-               Next_Double_Pattern'Result <= End_Val and then
-               Is_Double_Pattern (Next_Double_Pattern'Result));
+     Pre => Start <= End_Val,
+     Post =>
+       Next_Double_Pattern'Result = 0
+       or else (Next_Double_Pattern'Result >= Start
+                and then Next_Double_Pattern'Result <= End_Val
+                and then Is_Double_Pattern (Next_Double_Pattern'Result));
 
    ---------------------------------------------------------------------------
    --  Puzzle Solvers (File I/O required)
