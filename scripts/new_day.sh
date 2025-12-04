@@ -443,7 +443,7 @@ pragma Ada_2022;
 with Ada.Text_IO;
 with $PKG_NAME;
 
-procedure Main with SPARK_Mode => On is
+procedure Main_${PKG_NAME_LOWER} with SPARK_Mode => On is
    use Ada.Text_IO;
 
    --  Trim leading spaces from a string
@@ -481,7 +481,7 @@ begin
 
    Put_Line ("Part 1: " & Trim_Left (${PKG_NAME}.Solve_Part_1 ("input.txt")));
    Put_Line ("Part 2: " & Trim_Left (${PKG_NAME}.Solve_Part_2 ("input.txt")));
-end Main;
+end Main_${PKG_NAME_LOWER};
 EOF
 info "Created main_${PKG_NAME_LOWER}.adb"
 
