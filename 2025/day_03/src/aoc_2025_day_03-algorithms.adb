@@ -4,10 +4,12 @@
 --  SPDX-License-Identifier: MIT
 --------------------------------------------------------------------------------
 
-with AoC_Common; use AoC_Common;
+with AoC_Common;         use AoC_Common;
 with AoC_Common.Parsing; use AoC_Common.Parsing;
 
-package body AoC_2025_Day_03.Algorithms with SPARK_Mode => On is
+package body AoC_2025_Day_03.Algorithms
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Part 1 Implementation

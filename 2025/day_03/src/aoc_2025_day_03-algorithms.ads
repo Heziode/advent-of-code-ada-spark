@@ -16,7 +16,9 @@
 --  Thread Safety: Thread-safe (pure functions)
 --  SPARK Status: Verified (Silver - AoRTE)
 
-package AoC_2025_Day_03.Algorithms with SPARK_Mode => On is
+package AoC_2025_Day_03.Algorithms
+  with SPARK_Mode => On
+is
 
    --  Maximum line length for battery banks
    MAX_BANK_LENGTH : constant := 1000;
@@ -36,7 +38,7 @@ package AoC_2025_Day_03.Algorithms with SPARK_Mode => On is
    --  @param Bank String of digit characters ('1'..'9')
    --  @return Maximum two-digit joltage achievable, or 0 if invalid
    function Maximum_Joltage_From_Bank (Bank : String) return Natural
-     with Pre => Bank'Length <= MAX_BANK_LENGTH;
+   with Pre => Bank'Length <= MAX_BANK_LENGTH;
 
    --  Number of batteries to select for Part 2
    BATTERIES_TO_SELECT : constant := 12;
@@ -56,6 +58,6 @@ package AoC_2025_Day_03.Algorithms with SPARK_Mode => On is
    --  @param Bank String of digit characters ('1'..'9')
    --  @return Maximum 12-digit joltage achievable, or 0 if bank too short
    function Maximum_Joltage_12_From_Bank (Bank : String) return Long_Long_Integer
-     with Pre => Bank'Length <= MAX_BANK_LENGTH;
+   with Pre => Bank'Length <= MAX_BANK_LENGTH;
 
 end AoC_2025_Day_03.Algorithms;

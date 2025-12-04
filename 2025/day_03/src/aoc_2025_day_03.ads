@@ -16,7 +16,9 @@
 
 pragma Ada_2022;
 
-package AoC_2025_Day_03 with SPARK_Mode => On is
+package AoC_2025_Day_03
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Result Type

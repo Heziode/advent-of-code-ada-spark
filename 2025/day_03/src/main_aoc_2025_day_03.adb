@@ -17,10 +17,7 @@ procedure Main_AOC_2025_Day_03 with SPARK_Mode => On is
    use Ada.Text_IO;
 
    --  Trim leading spaces from a string
-   function Trim_Left (S : String) return String
-   with
-      Post => Trim_Left'Result'Length <= S'Length
-   is
+   function Trim_Left (S : String) return String with Post => Trim_Left'Result'Length <= S'Length is
    begin
       if S'Length = 0 then
          return "";
