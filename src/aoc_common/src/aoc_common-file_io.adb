@@ -196,9 +196,7 @@ is
       begin
          while not End_Of_File (File) loop
             Get_Line (File, Buffer, Last);
-            if Last >= Buffer'First then
-               Process_Line (Buffer (Buffer'First .. Last), Data);
-            end if;
+            Process_Line (Buffer (Buffer'First .. Last), Data);
          end loop;
          Success := True;
       exception
