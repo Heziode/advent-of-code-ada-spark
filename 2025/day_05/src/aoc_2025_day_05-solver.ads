@@ -19,7 +19,9 @@
 
 with AoC_Common.File_IO;
 
-package AoC_2025_Day_05.Solver with SPARK_Mode => On is
+package AoC_2025_Day_05.Solver
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Constants and Types
@@ -28,7 +30,7 @@ package AoC_2025_Day_05.Solver with SPARK_Mode => On is
    --  Use Long_Long_Integer to ensure we cover large IDs
    subtype Ingredient_ID is Long_Long_Integer range 0 .. Long_Long_Integer'Last;
 
-   MAX_RANGES      : constant := 1000;
+   MAX_RANGES : constant := 1000;
    MAX_INGREDIENTS : constant := 5000;
 
    type Fresh_Range is record
@@ -42,12 +44,12 @@ package AoC_2025_Day_05.Solver with SPARK_Mode => On is
    type Parsing_State_Type is (Parsing_Ranges, Parsing_Ingredients);
 
    type Solver_State is new AoC_Common.File_IO.Data_Context with record
-      Ranges           : Range_Array         := [others => (0, 0)];
-      Range_Count      : Natural             := 0;
-      Ingredients      : Ingredient_Array    := [others => 0];
-      Ingredient_Count : Natural             := 0;
-      Current_State    : Parsing_State_Type  := Parsing_Ranges;
-      Error_Encountered : Boolean            := False;
+      Ranges            : Range_Array := [others => (0, 0)];
+      Range_Count       : Natural := 0;
+      Ingredients       : Ingredient_Array := [others => 0];
+      Ingredient_Count  : Natural := 0;
+      Current_State     : Parsing_State_Type := Parsing_Ranges;
+      Error_Encountered : Boolean := False;
    end record;
 
    ---------------------------------------------------------------------------
@@ -66,13 +68,13 @@ package AoC_2025_Day_05.Solver with SPARK_Mode => On is
    --  @param State The populated state
    --  @return The count of fresh ingredients
    function Solve_Part_1 (State : Solver_State) return Long_Long_Integer
-     with Pre'Class => State_Invariant (State);
+   with Pre'Class => State_Invariant (State);
 
    --  Solve Part 2: Count total unique IDs covered by ranges
    --  @param State The populated state
    --  @return The total count
    function Solve_Part_2 (State : Solver_State) return Long_Long_Integer
-     with Pre'Class => State_Invariant (State);
+   with Pre'Class => State_Invariant (State);
 
    ---------------------------------------------------------------------------
    --  Internal Helpers (Public for testing/proof visibility if needed)
@@ -81,13 +83,12 @@ package AoC_2025_Day_05.Solver with SPARK_Mode => On is
    function Is_Fresh (ID : Ingredient_ID; Ranges : Range_Array; Count : Natural) return Boolean;
 
    --  Invariant for the state (optional, but good for SPARK)
-   function State_Invariant (State : Solver_State) return Boolean is
-     (State.Range_Count <= MAX_RANGES and then
-      State.Ingredient_Count <= MAX_INGREDIENTS);
+   function State_Invariant (State : Solver_State) return Boolean
+   is (State.Range_Count <= MAX_RANGES and then State.Ingredient_Count <= MAX_INGREDIENTS);
 
 private
 
    procedure Sort_Ranges (Ranges : in out Range_Array; Count : Natural)
-     with Pre => Count <= MAX_RANGES;
+   with Pre => Count <= MAX_RANGES;
 
 end AoC_2025_Day_05.Solver;

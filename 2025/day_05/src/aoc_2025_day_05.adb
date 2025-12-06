@@ -22,7 +22,9 @@ with Aoc_2025_Day_05_Config;
 with AoC_2025_Day_05.Solver;
 with AoC_Common.File_IO;
 
-package body AoC_2025_Day_05 with SPARK_Mode => Off is
+package body AoC_2025_Day_05
+  with SPARK_Mode => Off
+is
 
    package Day_Resources is new Resources (Aoc_2025_Day_05_Config.Crate_Name);
 
@@ -30,11 +32,12 @@ package body AoC_2025_Day_05 with SPARK_Mode => Off is
    --  Instantiation of File Processor
    ---------------------------------------------------------------------------
 
-   procedure Process_All_Lines is new AoC_Common.File_IO.For_Each_Line
-     (Data_Type       => Solver.Solver_State,
-      Max_Line_Length => 1024,
-      Invariant       => Solver.State_Invariant,
-      Process_Line    => Solver.Process_Line);
+   procedure Process_All_Lines is new
+     AoC_Common.File_IO.For_Each_Line
+       (Data_Type       => Solver.Solver_State,
+        Max_Line_Length => 1024,
+        Invariant       => Solver.State_Invariant,
+        Process_Line    => Solver.Process_Line);
 
    ---------------------------------------------------------------------------
    --  Solvers
@@ -46,7 +49,7 @@ package body AoC_2025_Day_05 with SPARK_Mode => Off is
       Success   : Boolean;
    begin
       Solver.Initialize (State);
-      
+
       Process_All_Lines (Full_Path, Success, State);
 
       if not Success or else State.Error_Encountered then
@@ -55,8 +58,8 @@ package body AoC_2025_Day_05 with SPARK_Mode => Off is
       end if;
 
       declare
-         Result : constant Long_Long_Integer := Solver.Solve_Part_1 (State);
-         Image  : constant String := Long_Long_Integer'Image (Result);
+         Result    : constant Long_Long_Integer := Solver.Solve_Part_1 (State);
+         Image     : constant String := Long_Long_Integer'Image (Result);
          Formatted : Result_String := BLANK_RESULT;
       begin
          if Image'Length <= Formatted'Length then
@@ -72,7 +75,7 @@ package body AoC_2025_Day_05 with SPARK_Mode => Off is
       Success   : Boolean;
    begin
       Solver.Initialize (State);
-      
+
       Process_All_Lines (Full_Path, Success, State);
 
       if not Success or else State.Error_Encountered then
@@ -81,8 +84,8 @@ package body AoC_2025_Day_05 with SPARK_Mode => Off is
       end if;
 
       declare
-         Result : constant Long_Long_Integer := Solver.Solve_Part_2 (State);
-         Image  : constant String := Long_Long_Integer'Image (Result);
+         Result    : constant Long_Long_Integer := Solver.Solve_Part_2 (State);
+         Image     : constant String := Long_Long_Integer'Image (Result);
          Formatted : Result_String := BLANK_RESULT;
       begin
          if Image'Length <= Formatted'Length then

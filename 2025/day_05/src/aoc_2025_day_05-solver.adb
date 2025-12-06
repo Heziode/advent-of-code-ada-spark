@@ -7,7 +7,9 @@
 with AoC_Common.File_IO;
 with AoC_Common;
 
-package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
+package body AoC_2025_Day_05.Solver
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Local Helpers
@@ -15,18 +17,10 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
 
    --  Parse a Long_Long_Integer from a substring
    procedure Parse_Long
-     (S       : String;
-      Start   : Positive;
-      Result  : out Ingredient_ID;
-      Success : out Boolean;
-      Next    : out Positive);
+     (S : String; Start : Positive; Result : out Ingredient_ID; Success : out Boolean; Next : out Positive);
 
    procedure Parse_Long
-     (S       : String;
-      Start   : Positive;
-      Result  : out Ingredient_ID;
-      Success : out Boolean;
-      Next    : out Positive)
+     (S : String; Start : Positive; Result : out Ingredient_ID; Success : out Boolean; Next : out Positive)
    is
       Val : Ingredient_ID := 0;
       Idx : Positive := Start;
@@ -40,7 +34,6 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
          Idx := Idx + 1;
       end loop;
 
-
       if Idx > S'Last or else S (Idx) not in '0' .. '9' then
          return;
       end if;
@@ -52,6 +45,7 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
             --  Check for overflow (basic check)
             if Val > Ingredient_ID'Last / 10 then
                return; -- Overflow
+
             end if;
             Val := Val * 10 + Digit;
          end;
@@ -69,13 +63,15 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
 
    procedure Initialize (State : out Solver_State) is
    begin
-      State := (Part => AoC_Common.Part_1, -- Default, unused
-                Ranges => [others => (0, 0)],
-                Range_Count => 0,
-                Ingredients => [others => 0],
-                Ingredient_Count => 0,
-                Current_State => Parsing_Ranges,
-                Error_Encountered => False);
+      State :=
+        (Part              => AoC_Common.Part_1,
+         -- Default, unused
+         Ranges            => [others => (0, 0)],
+         Range_Count       => 0,
+         Ingredients       => [others => 0],
+         Ingredient_Count  => 0,
+         Current_State     => Parsing_Ranges,
+         Error_Encountered => False);
    end Initialize;
 
    ---------------------------------------------------------------------------
@@ -83,9 +79,9 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
    ---------------------------------------------------------------------------
 
    procedure Process_Line (Line : String; State : in out Solver_State) is
-      Min_Val, Max_Val : Ingredient_ID;
+      Min_Val, Max_Val     : Ingredient_ID;
       Success_1, Success_2 : Boolean;
-      Next_Idx : Positive;
+      Next_Idx             : Positive;
 
       function Is_Blank (S : String) return Boolean is
       begin
@@ -157,7 +153,7 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
 
    procedure Sort_Ranges (Ranges : in out Range_Array; Count : Natural) is
       Temp : Fresh_Range;
-      J : Natural;
+      J    : Natural;
    begin
       if Count < 2 then
          return;
@@ -167,11 +163,11 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
       for I in 2 .. Count loop
          Temp := Ranges (I);
          J := I - 1;
-         
+
          while J > 0 and then Ranges (J).Min > Temp.Min loop
             pragma Loop_Variant (Decreases => J);
             pragma Loop_Invariant (J < I);
-            
+
             Ranges (J + 1) := Ranges (J);
             J := J - 1;
          end loop;
@@ -192,7 +188,7 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
 
       for I in 1 .. State.Ingredient_Count loop
          pragma Loop_Invariant (Count <= Long_Long_Integer (I - 1));
-         
+
          if Is_Fresh (State.Ingredients (I), State.Ranges, State.Range_Count) then
             Count := Count + 1;
          end if;
@@ -207,7 +203,7 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
       Total        : Long_Long_Integer := 0;
       Current      : Fresh_Range;
       Merged_Count : Natural := 0;
-      
+
       Range_Size : Long_Long_Integer;
    begin
       if State.Error_Encountered or else Count = 0 then
@@ -221,11 +217,11 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
       for I in 2 .. Count loop
          pragma Loop_Invariant (Merged_Count < I);
          pragma Loop_Invariant (Total >= 0);
-         
+
          --  Check for overlap or adjacency (e.g., 1-5 and 6-10 can merge to 1-10)
          --  We must check safely to avoid overflow of Current.Max + 1
          if Local_Ranges (I).Min <= Current.Max
-            or else (Current.Max < Long_Long_Integer'Last and then Local_Ranges (I).Min = Current.Max + 1)
+           or else (Current.Max < Long_Long_Integer'Last and then Local_Ranges (I).Min = Current.Max + 1)
          then
             if Local_Ranges (I).Max > Current.Max then
                Current.Max := Local_Ranges (I).Max;
@@ -233,12 +229,12 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
          else
             --  End of current range block
             Range_Size := Current.Max - Current.Min;
-            
+
             --  Check for overflow of Range_Len = Range_Size + 1
             if Range_Size = Long_Long_Integer'Last then
                return -1;
             end if;
-            
+
             --  Check for overflow of Total
             if Long_Long_Integer'Last - Total < (Range_Size + 1) then
                return -1;
@@ -252,11 +248,11 @@ package body AoC_2025_Day_05.Solver with SPARK_Mode => On is
 
       --  Process the last range
       Range_Size := Current.Max - Current.Min;
-      
+
       if Range_Size = Long_Long_Integer'Last then
          return -1;
       end if;
-      
+
       if Long_Long_Integer'Last - Total < (Range_Size + 1) then
          return -1;
       end if;
