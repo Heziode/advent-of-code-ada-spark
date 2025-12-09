@@ -276,11 +276,8 @@ is
    --  Helper: Compute Part 1 result (product of top 3 circuit sizes)
    ---------------------------------------------------------------------------
 
-   function Compute_Part_1_Result
-     (Parent    : Parent_Array;
-      Box_Count : Natural) return Long_Long_Integer
-   with
-     Pre => Box_Count >= 1 and then Box_Count <= MAX_BOXES
+   function Compute_Part_1_Result (Parent : Parent_Array; Box_Count : Natural) return Long_Long_Integer
+   with Pre => Box_Count >= 1 and then Box_Count <= MAX_BOXES
    is
       subtype Valid_Box_Index is Positive range 1 .. Box_Count;
       type Size_Array is array (Box_Index) of Natural;

@@ -51,12 +51,8 @@ is
    --  @param S The string containing the number
    --  @param Value Output: the parsed value
    --  @param Success Output: True if parsing succeeded
-   procedure Parse_Coordinate
-     (S       : String;
-      Value   : out Coordinate_Value;
-      Success : out Boolean)
-   with
-     Post => (if Success then Value in Coordinate_Value)
+   procedure Parse_Coordinate (S : String; Value : out Coordinate_Value; Success : out Boolean)
+   with Post => (if Success then Value in Coordinate_Value)
    is
       Result : Long_Long_Integer := 0;
    begin
@@ -70,12 +66,12 @@ is
       for I in S'Range loop
          if S (I) in '0' .. '9' then
             declare
-               Digit : constant Long_Long_Integer :=
-                 Character'Pos (S (I)) - Character'Pos ('0');
+               Digit : constant Long_Long_Integer := Character'Pos (S (I)) - Character'Pos ('0');
             begin
                --  Check for overflow before multiplication
                if Result > (Long_Long_Integer (Coordinate_Value'Last) - Digit) / 10 then
                   return;  --  Would overflow
+
                end if;
                Result := Result * 10 + Digit;
             end;
@@ -100,10 +96,7 @@ is
    --  @param Tile_A First corner tile
    --  @param Tile_B Second corner tile (opposite)
    --  @return The rectangle area (width * height) counting all tiles inside
-   function Calculate_Rectangle_Area
-     (Tile_A : Red_Tile;
-      Tile_B : Red_Tile) return Long_Long_Integer
-   is
+   function Calculate_Rectangle_Area (Tile_A : Red_Tile; Tile_B : Red_Tile) return Long_Long_Integer is
       Width  : Long_Long_Integer;
       Height : Long_Long_Integer;
    begin
@@ -128,10 +121,7 @@ is
    ---------------------------------------------------------------------------
 
    --  Simple insertion sort for coordinate array
-   procedure Sort_Coordinates
-     (Coords : in out Coord_Array;
-      Count  : Natural)
-   is
+   procedure Sort_Coordinates (Coords : in out Coord_Array; Count : Natural) is
       Key : Coordinate_Value;
       J   : Natural;
    begin
@@ -155,10 +145,7 @@ is
    end Sort_Coordinates;
 
    --  Remove duplicates from sorted coordinate array
-   procedure Remove_Duplicates
-     (Coords : in out Coord_Array;
-      Count  : in out Natural)
-   is
+   procedure Remove_Duplicates (Coords : in out Coord_Array; Count : in out Natural) is
       Write_Pos : Natural := 1;
    begin
       if Count <= 1 then
@@ -178,11 +165,7 @@ is
    end Remove_Duplicates;
 
    --  Binary search for coordinate index
-   function Find_Coord_Index
-     (Coords : Coord_Array;
-      Count  : Natural;
-      Value  : Coordinate_Value) return Natural
-   is
+   function Find_Coord_Index (Coords : Coord_Array; Count : Natural; Value : Coordinate_Value) return Natural is
       Low, High, Mid : Natural;
    begin
       if Count = 0 then
@@ -216,14 +199,11 @@ is
    --  Check if a point is inside the polygon using ray casting
    --  Counts crossings of horizontal ray going right from point
    function Is_Point_Inside_Polygon
-     (Point_X    : Coordinate_Value;
-      Point_Y    : Coordinate_Value;
-      Tiles      : Tile_Array;
-      Tile_Count : Natural) return Boolean
+     (Point_X : Coordinate_Value; Point_Y : Coordinate_Value; Tiles : Tile_Array; Tile_Count : Natural) return Boolean
    is
-      Crossings : Natural := 0;
+      Crossings      : Natural := 0;
       X1, Y1, X2, Y2 : Coordinate_Value;
-      Next_Idx : Natural;
+      Next_Idx       : Natural;
    begin
       if Tile_Count < 3 then
          return False;
@@ -242,10 +222,8 @@ is
          if X1 = X2 then
             --  Vertical edge at X = X1
             declare
-               Min_Y : constant Coordinate_Value :=
-                 (if Y1 < Y2 then Y1 else Y2);
-               Max_Y : constant Coordinate_Value :=
-                 (if Y1 > Y2 then Y1 else Y2);
+               Min_Y : constant Coordinate_Value := (if Y1 < Y2 then Y1 else Y2);
+               Max_Y : constant Coordinate_Value := (if Y1 > Y2 then Y1 else Y2);
             begin
                --  Ray crosses if edge is to the right and spans our Y
                if X1 > Point_X and then Point_Y > Min_Y and then Point_Y <= Max_Y then
@@ -263,13 +241,10 @@ is
 
    --  Check if a point is on the polygon boundary
    function Is_Point_On_Boundary
-     (Point_X    : Coordinate_Value;
-      Point_Y    : Coordinate_Value;
-      Tiles      : Tile_Array;
-      Tile_Count : Natural) return Boolean
+     (Point_X : Coordinate_Value; Point_Y : Coordinate_Value; Tiles : Tile_Array; Tile_Count : Natural) return Boolean
    is
       X1, Y1, X2, Y2 : Coordinate_Value;
-      Next_Idx : Natural;
+      Next_Idx       : Natural;
    begin
       if Tile_Count < 2 then
          return False;
@@ -287,10 +262,8 @@ is
          if X1 = X2 then
             --  Vertical edge
             declare
-               Min_Y : constant Coordinate_Value :=
-                 (if Y1 < Y2 then Y1 else Y2);
-               Max_Y : constant Coordinate_Value :=
-                 (if Y1 > Y2 then Y1 else Y2);
+               Min_Y : constant Coordinate_Value := (if Y1 < Y2 then Y1 else Y2);
+               Max_Y : constant Coordinate_Value := (if Y1 > Y2 then Y1 else Y2);
             begin
                if Point_X = X1 and then Point_Y >= Min_Y and then Point_Y <= Max_Y then
                   return True;
@@ -299,10 +272,8 @@ is
          elsif Y1 = Y2 then
             --  Horizontal edge
             declare
-               Min_X : constant Coordinate_Value :=
-                 (if X1 < X2 then X1 else X2);
-               Max_X : constant Coordinate_Value :=
-                 (if X1 > X2 then X1 else X2);
+               Min_X : constant Coordinate_Value := (if X1 < X2 then X1 else X2);
+               Max_X : constant Coordinate_Value := (if X1 > X2 then X1 else X2);
             begin
                if Point_Y = Y1 and then Point_X >= Min_X and then Point_X <= Max_X then
                   return True;
@@ -318,13 +289,11 @@ is
 
    --  Check if a point is valid (red/green) for Part 2
    function Is_Point_Valid
-     (Point_X    : Coordinate_Value;
-      Point_Y    : Coordinate_Value;
-      Tiles      : Tile_Array;
-      Tile_Count : Natural) return Boolean
+     (Point_X : Coordinate_Value; Point_Y : Coordinate_Value; Tiles : Tile_Array; Tile_Count : Natural) return Boolean
    is
    begin
-      return Is_Point_On_Boundary (Point_X, Point_Y, Tiles, Tile_Count)
+      return
+        Is_Point_On_Boundary (Point_X, Point_Y, Tiles, Tile_Count)
         or else Is_Point_Inside_Polygon (Point_X, Point_Y, Tiles, Tile_Count);
    end Is_Point_Valid;
 
@@ -336,8 +305,7 @@ is
       X_Count    : Natural;
       Y_Coords   : Coord_Array;
       Y_Count    : Natural;
-      Grid       : out Validity_Grid)
-   is
+      Grid       : out Validity_Grid) is
    begin
       --  Initialize grid to False
       Grid := [others => [others => False]];
@@ -345,8 +313,7 @@ is
       --  Mark each coordinate intersection as valid or not
       for XI in 1 .. X_Count loop
          for YI in 1 .. Y_Count loop
-            Grid (XI) (YI) := Is_Point_Valid
-              (X_Coords (XI), Y_Coords (YI), Tiles, Tile_Count);
+            Grid (XI) (YI) := Is_Point_Valid (X_Coords (XI), Y_Coords (YI), Tiles, Tile_Count);
          end loop;
       end loop;
    end Build_Validity_Grid;
@@ -354,10 +321,7 @@ is
    --  Build 2D prefix sum of invalid cells for O(1) rectangle queries
    --  Prefix(i,j) = count of invalid cells in rectangle (1,1) to (i,j)
    procedure Build_Invalid_Prefix_Sum
-     (Grid       : Validity_Grid;
-      X_Count    : Natural;
-      Y_Count    : Natural;
-      Prefix     : out Prefix_Sum_Grid)
+     (Grid : Validity_Grid; X_Count : Natural; Y_Count : Natural; Prefix : out Prefix_Sum_Grid)
    is
       Invalid_Count : Natural;
    begin
@@ -388,10 +352,7 @@ is
    end Build_Invalid_Prefix_Sum;
 
    --  Query invalid count in rectangle using prefix sums (O(1))
-   function Query_Invalid_Count
-     (Prefix           : Prefix_Sum_Grid;
-      X1, X2, Y1, Y2   : Natural) return Natural
-   is
+   function Query_Invalid_Count (Prefix : Prefix_Sum_Grid; X1, X2, Y1, Y2 : Natural) return Natural is
       Result : Integer;
    begin
       Result := Prefix (X2, Y2);
@@ -486,10 +447,8 @@ is
       XI1, XI2, YI1, YI2 : Natural;
 
       --  Deallocation procedures
-      procedure Free_Validity_Grid is new Ada.Unchecked_Deallocation
-        (Validity_Grid, Validity_Grid_Ptr);
-      procedure Free_Prefix_Sum is new Ada.Unchecked_Deallocation
-        (Prefix_Sum_Grid, Prefix_Sum_Grid_Ptr);
+      procedure Free_Validity_Grid is new Ada.Unchecked_Deallocation (Validity_Grid, Validity_Grid_Ptr);
+      procedure Free_Prefix_Sum is new Ada.Unchecked_Deallocation (Prefix_Sum_Grid, Prefix_Sum_Grid_Ptr);
    begin
       State.Max_Area := 0;
       State.Max_Area_Part_2 := 0;
@@ -509,8 +468,7 @@ is
             pragma Loop_Invariant (State.Max_Area >= 0);
             pragma Loop_Invariant (J <= State.Tile_Count);
 
-            Current_Area := Calculate_Rectangle_Area
-              (State.Tiles (I), State.Tiles (J));
+            Current_Area := Calculate_Rectangle_Area (State.Tiles (I), State.Tiles (J));
 
             if Current_Area > State.Max_Area then
                State.Max_Area := Current_Area;
@@ -547,10 +505,7 @@ is
       Remove_Duplicates (Y_Coords, Y_Count);
 
       --  Step 2: Pre-compute validity grid (O(m² × n) but done ONCE)
-      Build_Validity_Grid
-        (State.Tiles, State.Tile_Count,
-         X_Coords, X_Count, Y_Coords, Y_Count,
-         Valid_Grid_Heap.all);
+      Build_Validity_Grid (State.Tiles, State.Tile_Count, X_Coords, X_Count, Y_Coords, Y_Count, Valid_Grid_Heap.all);
 
       --  Step 3: Build prefix sum for O(1) rectangle queries
       Build_Invalid_Prefix_Sum (Valid_Grid_Heap.all, X_Count, Y_Count, Prefix_Heap.all);
@@ -592,8 +547,7 @@ is
             --  Check if rectangle is valid using O(1) prefix sum query
             if XI1 > 0 and then XI2 > 0 and then YI1 > 0 and then YI2 > 0 then
                if Query_Invalid_Count (Prefix_Heap.all, XI1, XI2, YI1, YI2) = 0 then
-                  Current_Area := Calculate_Rectangle_Area
-                    (State.Tiles (I), State.Tiles (J));
+                  Current_Area := Calculate_Rectangle_Area (State.Tiles (I), State.Tiles (J));
 
                   if Current_Area > State.Max_Area_Part_2 then
                      State.Max_Area_Part_2 := Current_Area;
