@@ -1,0 +1,22 @@
+name = "aoc_2025_day_10"
+description = "Advent of Code 2025 Day 10 - SPARK-verified solution"
+version = "0.1.0-dev"
+authors = ["Heziode"]
+maintainers = ["Heziode <heziode@users.noreply.github.com>"]
+maintainers-logins = ["Heziode"]
+licenses = "MIT"
+tags = ["advent-of-code", "spark", "puzzles", "2025", "day10"]
+
+executables = ["main_aoc_2025_day_10"]
+
+[build-switches]
+"*".style_checks = ["-gnatyy", "-gnatyM120", "-gnatw.X"]
+"*".ada_version = ["-gnat2022"]
+
+[[depends-on]]
+gnat = ">=12"
+resources = "*"
+gnatprove = "^15.1.0"
+
+[[pins]]
+aoc_common = { path = "../../src/aoc_common" }
