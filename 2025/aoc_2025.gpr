@@ -22,7 +22,8 @@ aggregate project AoC_2025 is
       "day_07/aoc_2025_day_07.gpr",
       "day_08/aoc_2025_day_08.gpr",
       "day_09/aoc_2025_day_09.gpr",
-      "day_10/aoc_2025_day_10.gpr"
+      "day_10/aoc_2025_day_10.gpr",
+      "day_11/aoc_2025_day_11.gpr"
    );
 
 end AoC_2025;
