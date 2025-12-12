@@ -17,7 +17,9 @@ with AoC_2025_Day_12.Solver;
 with Resources;
 with Aoc_2025_Day_12_Config;
 
-package body AoC_2025_Day_12 with SPARK_Mode => Off is
+package body AoC_2025_Day_12
+  with SPARK_Mode => Off
+is
 
    ---------------------------------------------------------------------------
    --  Resource Path Helper
@@ -46,14 +48,14 @@ package body AoC_2025_Day_12 with SPARK_Mode => Off is
    function State_Invariant (State : Solver.Solver_State) return Boolean
    is (Solver.State_Invariant (State));
 
-   procedure Process_Line_Wrapper (Line : String; State : in out Solver.Solver_State)
-     renames Solver.Process_Line;
+   procedure Process_Line_Wrapper (Line : String; State : in out Solver.Solver_State) renames Solver.Process_Line;
 
-   procedure Read_Input is new AoC_Common.File_IO.For_Each_Line
-     (Data_Type       => Solver.Solver_State,
-      Max_Line_Length => 256,
-      Invariant       => State_Invariant,
-      Process_Line    => Process_Line_Wrapper);
+   procedure Read_Input is new
+     AoC_Common.File_IO.For_Each_Line
+       (Data_Type       => Solver.Solver_State,
+        Max_Line_Length => 256,
+        Invariant       => State_Invariant,
+        Process_Line    => Process_Line_Wrapper);
 
    ---------------------------------------------------------------------------
    --  Solve Functions

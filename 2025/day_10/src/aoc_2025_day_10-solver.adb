@@ -44,11 +44,8 @@ is
    subtype Light_Bitset is Natural;
 
    --  Convert Light_Vector to bitset
-   function To_Bitset
-     (Vector      : Light_Vector;
-      Light_Count : Natural) return Light_Bitset
-   with
-     Pre => Light_Count <= MAX_LIGHTS
+   function To_Bitset (Vector : Light_Vector; Light_Count : Natural) return Light_Bitset
+   with Pre => Light_Count <= MAX_LIGHTS
    is
       Result : Light_Bitset := 0;
    begin
@@ -61,11 +58,8 @@ is
    end To_Bitset;
 
    --  Convert Button_Mask to bitset
-   function Mask_To_Bitset
-     (Mask        : Button_Mask;
-      Light_Count : Natural) return Light_Bitset
-   with
-     Pre => Light_Count <= MAX_LIGHTS
+   function Mask_To_Bitset (Mask : Button_Mask; Light_Count : Natural) return Light_Bitset
+   with Pre => Light_Count <= MAX_LIGHTS
    is
       Result : Light_Bitset := 0;
    begin
@@ -78,16 +72,15 @@ is
    end Mask_To_Bitset;
 
    --  XOR two bitsets (toggle operation)
-   function Xor_Bitset (A, B : Light_Bitset) return Light_Bitset
-   is
+   function Xor_Bitset (A, B : Light_Bitset) return Light_Bitset is
       --  Implement XOR using arithmetic for SPARK compatibility
       --  XOR(a,b) = (a + b) - 2 * AND(a,b)
       --  We use the fact that for single bits: a XOR b = (a + b) mod 2
-      Result : Light_Bitset := 0;
+      Result       : Light_Bitset := 0;
       Bit_A, Bit_B : Natural;
-      Power_Of_2 : Natural := 1;
-      Temp_A : Natural := A;
-      Temp_B : Natural := B;
+      Power_Of_2   : Natural := 1;
+      Temp_A       : Natural := A;
+      Temp_B       : Natural := B;
    begin
       for I in 0 .. MAX_LIGHTS - 1 loop
          Bit_A := Temp_A mod 2;
@@ -117,14 +110,8 @@ is
    with Inline;
 
    --  Parse a natural number starting at position Idx, advance Idx past it
-   procedure Parse_Natural_At
-     (Line    : String;
-      Idx     : in out Positive;
-      Value   : out Natural;
-      Success : out Boolean)
-   with
-     Pre  => Idx in Line'Range,
-     Post => Idx <= Line'Last + 1
+   procedure Parse_Natural_At (Line : String; Idx : in out Positive; Value : out Natural; Success : out Boolean)
+   with Pre => Idx in Line'Range, Post => Idx <= Line'Last + 1
    is
       Result : Natural := 0;
    begin
@@ -142,8 +129,7 @@ is
 
       while Idx <= Line'Last and then Is_Digit (Line (Idx)) loop
          declare
-            Digit : constant Natural := Character'Pos (Line (Idx))
-                                        - Character'Pos ('0');
+            Digit : constant Natural := Character'Pos (Line (Idx)) - Character'Pos ('0');
          begin
             --  Overflow check
             if Result > (Natural'Last - Digit) / 10 then
@@ -160,14 +146,13 @@ is
 
    --  Parse target light state from [.##.] format
    procedure Parse_Target
-     (Line         : String;
-      Start_Idx    : Positive;
-      Target       : out Light_Vector;
-      Light_Count  : out Natural;
-      End_Idx      : out Natural;
-      Success      : out Boolean)
-   with
-     Pre => Start_Idx in Line'Range
+     (Line        : String;
+      Start_Idx   : Positive;
+      Target      : out Light_Vector;
+      Light_Count : out Natural;
+      End_Idx     : out Natural;
+      Success     : out Boolean)
+   with Pre => Start_Idx in Line'Range
    is
       Idx : Natural := Start_Idx;
    begin
@@ -191,6 +176,7 @@ is
       while Idx <= Line'Last and then Line (Idx) /= ']' loop
          if Light_Count >= MAX_LIGHTS then
             return;  --  Too many lights
+
          end if;
 
          case Line (Idx) is
@@ -219,18 +205,17 @@ is
 
    --  Parse a single button definition (comma-separated light indices)
    procedure Parse_Button
-     (Line         : String;
-      Start_Idx    : Positive;
-      Light_Count  : Natural;
-      Mask         : out Button_Mask;
-      End_Idx      : out Natural;
-      Success      : out Boolean)
-   with
-     Pre => Start_Idx in Line'Range and then Light_Count <= MAX_LIGHTS
+     (Line        : String;
+      Start_Idx   : Positive;
+      Light_Count : Natural;
+      Mask        : out Button_Mask;
+      End_Idx     : out Natural;
+      Success     : out Boolean)
+   with Pre => Start_Idx in Line'Range and then Light_Count <= MAX_LIGHTS
    is
-      Idx        : Natural := Start_Idx;
-      Light_Idx  : Natural;
-      Parse_Ok   : Boolean;
+      Idx       : Natural := Start_Idx;
+      Light_Idx : Natural;
+      Parse_Ok  : Boolean;
    begin
       Mask := [others => 0];
       End_Idx := Start_Idx;
@@ -250,14 +235,13 @@ is
       --  Parse comma-separated light indices until ')'
       loop
          --  Skip whitespace and commas
-         while Idx <= Line'Last
-           and then (Line (Idx) = ' ' or else Line (Idx) = ',')
-         loop
+         while Idx <= Line'Last and then (Line (Idx) = ' ' or else Line (Idx) = ',') loop
             Idx := Idx + 1;
          end loop;
 
          if Idx > Line'Last then
             return;  --  Unclosed parenthesis
+
          end if;
 
          if Line (Idx) = ')' then
@@ -287,12 +271,11 @@ is
       Buttons      : out Button_Array;
       Button_Count : out Natural;
       Success      : out Boolean)
-   with
-     Pre => Start_Idx <= Line'Last + 1 and then Light_Count <= MAX_LIGHTS
+   with Pre => Start_Idx <= Line'Last + 1 and then Light_Count <= MAX_LIGHTS
    is
-      Idx          : Natural := Start_Idx;
-      End_Idx      : Natural;
-      Parse_Ok     : Boolean;
+      Idx      : Natural := Start_Idx;
+      End_Idx  : Natural;
+      Parse_Ok : Boolean;
    begin
       Buttons := [others => [others => 0]];
       Button_Count := 0;
@@ -311,8 +294,7 @@ is
                return;
             end if;
 
-            Parse_Button (Line, Idx, Light_Count,
-                          Buttons (Button_Count), End_Idx, Parse_Ok);
+            Parse_Button (Line, Idx, Light_Count, Buttons (Button_Count), End_Idx, Parse_Ok);
             if not Parse_Ok then
                Success := False;
                return;
@@ -328,18 +310,13 @@ is
 
    --  Parse joltage requirements from {3,5,4,7} format
    procedure Parse_Joltage
-     (Line           : String;
-      Start_Idx      : Positive;
-      Counter_Count  : Natural;
-      Joltage        : out Joltage_Array;
-      Success        : out Boolean)
-   with
-     Pre => Start_Idx <= Line'Last + 1 and then Counter_Count <= MAX_LIGHTS
+     (Line : String; Start_Idx : Positive; Counter_Count : Natural; Joltage : out Joltage_Array; Success : out Boolean)
+   with Pre => Start_Idx <= Line'Last + 1 and then Counter_Count <= MAX_LIGHTS
    is
-      Idx           : Natural := Start_Idx;
-      Counter_Idx   : Natural := 0;
-      Value         : Natural;
-      Parse_Ok      : Boolean;
+      Idx         : Natural := Start_Idx;
+      Counter_Idx : Natural := 0;
+      Value       : Natural;
+      Parse_Ok    : Boolean;
    begin
       Joltage := [others => 0];
       Success := False;
@@ -358,14 +335,13 @@ is
       --  Parse comma-separated joltage values until '}'
       loop
          --  Skip whitespace and commas
-         while Idx <= Line'Last
-           and then (Line (Idx) = ' ' or else Line (Idx) = ',')
-         loop
+         while Idx <= Line'Last and then (Line (Idx) = ' ' or else Line (Idx) = ',') loop
             Idx := Idx + 1;
          end loop;
 
          if Idx > Line'Last then
             return;  --  Unclosed brace
+
          end if;
 
          if Line (Idx) = '}' then
@@ -392,19 +368,16 @@ is
    end Parse_Joltage;
 
    --  Parse a complete machine definition from a line
-   procedure Parse_Machine
-     (Line    : String;
-      Mach    : out Machine;
-      Success : out Boolean)
-   is
-      End_Idx     : Natural;
-      Parse_Ok    : Boolean;
+   procedure Parse_Machine (Line : String; Mach : out Machine; Success : out Boolean) is
+      End_Idx  : Natural;
+      Parse_Ok : Boolean;
    begin
-      Mach := (Light_Count   => 0,
-               Button_Count  => 0,
-               Target        => [others => 0],
-               Joltage       => [others => 0],
-               Buttons       => [others => [others => 0]]);
+      Mach :=
+        (Light_Count  => 0,
+         Button_Count => 0,
+         Target       => [others => 0],
+         Joltage      => [others => 0],
+         Buttons      => [others => [others => 0]]);
       Success := False;
 
       if Line'Length = 0 then
@@ -412,15 +385,13 @@ is
       end if;
 
       --  Parse target light state
-      Parse_Target (Line, Line'First, Mach.Target, Mach.Light_Count,
-                    End_Idx, Parse_Ok);
+      Parse_Target (Line, Line'First, Mach.Target, Mach.Light_Count, End_Idx, Parse_Ok);
       if not Parse_Ok or else End_Idx > Line'Last then
          return;
       end if;
 
       --  Parse buttons
-      Parse_Buttons (Line, End_Idx, Mach.Light_Count,
-                     Mach.Buttons, Mach.Button_Count, Parse_Ok);
+      Parse_Buttons (Line, End_Idx, Mach.Light_Count, Mach.Buttons, Mach.Button_Count, Parse_Ok);
       if not Parse_Ok or else Mach.Button_Count = 0 then
          return;
       end if;
@@ -441,7 +412,7 @@ is
 
    --  BFS queue entry
    type BFS_Entry is record
-      State  : Light_Bitset;
+      State   : Light_Bitset;
       Presses : Natural;
    end record;
 
@@ -454,12 +425,8 @@ is
    function Hash_State (State : Light_Bitset) return Natural
    is (State mod HASH_SIZE);
 
-   procedure Mark_Visited
-     (Visited : in out Visited_Set;
-      State   : Light_Bitset;
-      Already : out Boolean)
-   is
-      H : Natural := Hash_State (State);
+   procedure Mark_Visited (Visited : in out Visited_Set; State : Light_Bitset; Already : out Boolean) is
+      H      : Natural := Hash_State (State);
       Probes : Natural := 0;
    begin
       Already := False;
@@ -478,11 +445,9 @@ is
    end Mark_Visited;
 
    --  Solve Part 1 using BFS
-   function Solve_Part_1_BFS (Mach : Machine) return Natural
-   is
+   function Solve_Part_1_BFS (Mach : Machine) return Natural is
       --  Queue for BFS
-      Queue : array (0 .. MAX_QUEUE_SIZE - 1) of BFS_Entry :=
-        [others => (State => 0, Presses => 0)];
+      Queue      : array (0 .. MAX_QUEUE_SIZE - 1) of BFS_Entry := [others => (State => 0, Presses => 0)];
       Queue_Head : Natural := 0;
       Queue_Tail : Natural := 0;
 
@@ -493,11 +458,10 @@ is
       Goal : constant Light_Bitset := To_Bitset (Mach.Target, Mach.Light_Count);
 
       --  Button masks as bitsets
-      Button_Masks : array (Button_Index) of Light_Bitset :=
-        [others => 0];
+      Button_Masks : array (Button_Index) of Light_Bitset := [others => 0];
 
-      Current : BFS_Entry;
-      Next_State : Light_Bitset;
+      Current         : BFS_Entry;
+      Next_State      : Light_Bitset;
       Already_Visited : Boolean;
    begin
       if Mach.Light_Count = 0 or else Mach.Button_Count = 0 then
@@ -531,8 +495,7 @@ is
 
             if not Already_Visited then
                if Queue_Tail < MAX_QUEUE_SIZE then
-                  Queue (Queue_Tail) := (State => Next_State,
-                                         Presses => Current.Presses + 1);
+                  Queue (Queue_Tail) := (State => Next_State, Presses => Current.Presses + 1);
                   Queue_Tail := Queue_Tail + 1;
                end if;
             end if;
@@ -558,34 +521,26 @@ is
    type Column_Permutation is array (Button_Index) of Natural;
 
    --  Build augmented matrix from machine definition for Part 2
-   procedure Build_Matrix_Integer
-     (Mach   : Machine;
-      Matrix : out Integer_Matrix)
-   is
+   procedure Build_Matrix_Integer (Mach : Machine; Matrix : out Integer_Matrix) is
    begin
       Matrix := [others => [others => 0]];
 
       --  Fill button columns (transposed: row = counter, col = button)
       for Button_Idx in 0 .. Mach.Button_Count - 1 loop
          for Counter_Idx in 0 .. Mach.Light_Count - 1 loop
-            Matrix (Counter_Idx, Button_Idx) :=
-              Integer (Mach.Buttons (Button_Idx) (Counter_Idx));
+            Matrix (Counter_Idx, Button_Idx) := Integer (Mach.Buttons (Button_Idx) (Counter_Idx));
          end loop;
       end loop;
 
       --  Fill target column (last column = joltage requirements)
       for Counter_Idx in 0 .. Mach.Light_Count - 1 loop
-         Matrix (Counter_Idx, Mach.Button_Count) :=
-           Integer (Mach.Joltage (Counter_Idx));
+         Matrix (Counter_Idx, Mach.Button_Count) := Integer (Mach.Joltage (Counter_Idx));
       end loop;
    end Build_Matrix_Integer;
 
    --  Swap two rows
    procedure Swap_Rows_Integer
-     (Matrix : in out Integer_Matrix;
-      Row1   : Matrix_Row_Index;
-      Row2   : Matrix_Row_Index;
-      Cols   : Natural)
+     (Matrix : in out Integer_Matrix; Row1 : Matrix_Row_Index; Row2 : Matrix_Row_Index; Cols : Natural)
    is
       Temp : Integer;
    begin
@@ -601,11 +556,7 @@ is
 
    --  Swap two columns and update permutation
    procedure Swap_Columns_Integer
-     (Matrix : in out Integer_Matrix;
-      Col1   : Natural;
-      Col2   : Natural;
-      Rows   : Natural;
-      Perm   : in out Column_Permutation)
+     (Matrix : in out Integer_Matrix; Col1 : Natural; Col2 : Natural; Rows : Natural; Perm : in out Column_Permutation)
    is
       Temp_Val  : Integer;
       Temp_Perm : Natural;
@@ -649,13 +600,14 @@ is
       Pivot_Col : Natural;
       Cols      : Natural)
    is
-      Pivot_Val  : constant Integer := Matrix (Pivot, Pivot_Col);
-      Target_Val : constant Integer := Matrix (Target, Pivot_Col);
-      G : Natural;
+      Pivot_Val        : constant Integer := Matrix (Pivot, Pivot_Col);
+      Target_Val       : constant Integer := Matrix (Target, Pivot_Col);
+      G                : Natural;
       Scale_P, Scale_T : Integer;
    begin
       if Target_Val = 0 then
          return;  --  Already eliminated
+
       end if;
 
       --  Use GCD to minimize coefficient growth
@@ -665,8 +617,7 @@ is
 
       --  Target_Row := Target_Row * Scale_T - Pivot_Row * Scale_P
       for Col in 0 .. Cols loop
-         Matrix (Target, Col) := Matrix (Target, Col) * Scale_T -
-                                  Matrix (Pivot, Col) * Scale_P;
+         Matrix (Target, Col) := Matrix (Target, Col) * Scale_T - Matrix (Pivot, Col) * Scale_P;
       end loop;
    end Integer_Eliminate;
 
@@ -679,9 +630,9 @@ is
       Perm   : out Column_Permutation;
       Rank   : out Natural)
    is
-      Pivot_Row : Natural := 0;
-      Pivot_Col : Natural := 0;
-      Found     : Boolean;
+      Pivot_Row          : Natural := 0;
+      Pivot_Col          : Natural := 0;
+      Found              : Boolean;
       Best_Row, Best_Col : Natural;
    begin
       Rank := 0;
@@ -706,7 +657,8 @@ is
 
          if not Found then
             --  Search other columns
-            Search_Cols : for Col in Pivot_Col + 1 .. Cols - 1 loop
+            Search_Cols :
+            for Col in Pivot_Col + 1 .. Cols - 1 loop
                for Row in Pivot_Row .. Rows - 1 loop
                   if Matrix (Row, Col) /= 0 then
                      Best_Row := Row;
@@ -741,14 +693,14 @@ is
    end Gaussian_Elimination_Integer;
 
    --  Check if a rational value is a non-negative integer
-   function Is_Valid_Rational (Numerator, Denominator : Integer) return Boolean
-   is
+   function Is_Valid_Rational (Numerator, Denominator : Integer) return Boolean is
    begin
       if Denominator = 0 then
          return False;
       end if;
       if Numerator mod Denominator /= 0 then
          return False;  --  Not an integer
+
       end if;
       if (Numerator >= 0) /= (Denominator >= 0) then
          --  Different signs => negative result
@@ -787,8 +739,7 @@ is
          Numerator := Matrix (Row, Button_Count);
 
          for F in 0 .. Free_Count - 1 loop
-            Numerator := Numerator -
-              Matrix (Row, Rank + F) * Integer (Free_Values (F));
+            Numerator := Numerator - Matrix (Row, Rank + F) * Integer (Free_Values (F));
          end loop;
 
          if not Is_Valid_Rational (Numerator, Denominator) then
@@ -801,10 +752,7 @@ is
    end Try_Compute_Solution;
 
    --  Compute sum of solution
-   function Compute_Solution_Sum
-     (Solution     : Button_Press_Array;
-      Button_Count : Natural) return Natural
-   is
+   function Compute_Solution_Sum (Solution : Button_Press_Array; Button_Count : Natural) return Natural is
       Sum : Natural := 0;
    begin
       for I in 0 .. Button_Count - 1 loop
@@ -831,8 +779,8 @@ is
    begin
       for Row in 0 .. Rank - 1 loop
          declare
-            Coeff : constant Integer := Matrix (Row, Rank + Free_Idx);
-            Pivot_Coeff : constant Integer := Matrix (Row, Row);
+            Coeff          : constant Integer := Matrix (Row, Rank + Free_Idx);
+            Pivot_Coeff    : constant Integer := Matrix (Row, Row);
             Has_Later_Free : Boolean := False;
          begin
             --  Skip if coefficient is zero (no constraint from this row)
@@ -855,8 +803,7 @@ is
                      Adjusted_RHS : Integer := Matrix (Row, Button_Count);
                   begin
                      for F in 0 .. Free_Idx - 1 loop
-                        Adjusted_RHS := Adjusted_RHS - Matrix (Row, Rank + F) *
-                          Integer (Current_Free (F));
+                        Adjusted_RHS := Adjusted_RHS - Matrix (Row, Rank + F) * Integer (Current_Free (F));
                      end loop;
 
                      --  Case 1: Pivot > 0, Coeff > 0 => x_free <= Adjusted_RHS / Coeff
@@ -873,7 +820,7 @@ is
                            end if;
                         end;
 
-                     --  Case 2: Pivot < 0, Coeff < 0 => x_free <= Adjusted_RHS / Coeff
+                        --  Case 2: Pivot < 0, Coeff < 0 => x_free <= Adjusted_RHS / Coeff
                      elsif Pivot_Coeff < 0 and then Coeff < 0 then
                         declare
                            Bound : constant Integer := Adjusted_RHS / Coeff;
@@ -905,24 +852,20 @@ is
    --  Iterative search over free variables using depth-first approach
    --  Returns minimum sum, or Natural'Last if no valid solution
    function Search_Free_Variables_Iterative
-     (Matrix       : Integer_Matrix;
-      Rank         : Natural;
-      Free_Count   : Natural;
-      Button_Count : Natural) return Natural
+     (Matrix : Integer_Matrix; Rank : Natural; Free_Count : Natural; Button_Count : Natural) return Natural
    is
       --  Stack for DFS (stores current free variable values)
-      Free_Values  : Column_Permutation := [others => 0];
-      Current_Idx  : Natural := 0;
-      Best_Sum     : Natural := Natural'Last;
-      Solution     : Button_Press_Array;
-      Is_Valid     : Boolean;
-      Upper_Bound  : Natural;
-      Current_Sum  : Natural := 0;
+      Free_Values : Column_Permutation := [others => 0];
+      Current_Idx : Natural := 0;
+      Best_Sum    : Natural := Natural'Last;
+      Solution    : Button_Press_Array;
+      Is_Valid    : Boolean;
+      Upper_Bound : Natural;
+      Current_Sum : Natural := 0;
    begin
       if Free_Count = 0 then
          --  No free variables - try the unique solution
-         Try_Compute_Solution (Matrix, Rank, 0, Button_Count, Free_Values,
-                               Solution, Is_Valid);
+         Try_Compute_Solution (Matrix, Rank, 0, Button_Count, Free_Values, Solution, Is_Valid);
          if Is_Valid then
             return Compute_Solution_Sum (Solution, Button_Count);
          else
@@ -934,12 +877,10 @@ is
       loop
          if Current_Idx = Free_Count then
             --  All free variables assigned - evaluate solution
-            Try_Compute_Solution (Matrix, Rank, Free_Count, Button_Count,
-                                  Free_Values, Solution, Is_Valid);
+            Try_Compute_Solution (Matrix, Rank, Free_Count, Button_Count, Free_Values, Solution, Is_Valid);
             if Is_Valid then
                declare
-                  Total : constant Natural :=
-                    Compute_Solution_Sum (Solution, Button_Count);
+                  Total : constant Natural := Compute_Solution_Sum (Solution, Button_Count);
                begin
                   if Total < Best_Sum then
                      Best_Sum := Total;
@@ -956,8 +897,8 @@ is
             Free_Values (Current_Idx) := Free_Values (Current_Idx) + 1;
          else
             --  Compute upper bound for current free variable
-            Upper_Bound := Compute_Free_Var_Upper_Bound
-              (Matrix, Rank, Current_Idx, Free_Count, Button_Count, Free_Values);
+            Upper_Bound :=
+              Compute_Free_Var_Upper_Bound (Matrix, Rank, Current_Idx, Free_Count, Button_Count, Free_Values);
 
             --  Pruning: skip if current sum >= best
             if Current_Sum >= Best_Sum then
@@ -989,8 +930,7 @@ is
    end Search_Free_Variables_Iterative;
 
    --  Solve Part 2 for a single machine
-   function Solve_Part_2_Integer (Mach : Machine) return Natural
-   is
+   function Solve_Part_2_Integer (Mach : Machine) return Natural is
       Matrix     : Integer_Matrix;
       Perm       : Column_Permutation;
       Rank       : Natural;
@@ -1001,21 +941,20 @@ is
       end if;
 
       Build_Matrix_Integer (Mach, Matrix);
-      Gaussian_Elimination_Integer (Matrix, Mach.Light_Count, Mach.Button_Count,
-                                    Perm, Rank);
+      Gaussian_Elimination_Integer (Matrix, Mach.Light_Count, Mach.Button_Count, Perm, Rank);
 
       --  Check for inconsistency: non-zero in RHS of zero rows
       for Row in Rank .. Mach.Light_Count - 1 loop
          if Matrix (Row, Mach.Button_Count) /= 0 then
             return Natural'Last;  --  No solution
+
          end if;
       end loop;
 
       Free_Count := Mach.Button_Count - Rank;
 
       declare
-         Result : constant Natural := Search_Free_Variables_Iterative
-           (Matrix, Rank, Free_Count, Mach.Button_Count);
+         Result : constant Natural := Search_Free_Variables_Iterative (Matrix, Rank, Free_Count, Mach.Button_Count);
       begin
          return Result;
       end;
@@ -1025,18 +964,17 @@ is
    --  Public Interface Implementation
    ---------------------------------------------------------------------------
 
-   procedure Initialize (State : out Solver_State)
-   is
+   procedure Initialize (State : out Solver_State) is
    begin
-      State := (Part                 => AoC_Common.Part_1,
-                Machine_Count        => 0,
-                Total_Presses        => 0,
-                Total_Presses_Part_2 => 0,
-                Error_Encountered    => False);
+      State :=
+        (Part                 => AoC_Common.Part_1,
+         Machine_Count        => 0,
+         Total_Presses        => 0,
+         Total_Presses_Part_2 => 0,
+         Error_Encountered    => False);
    end Initialize;
 
-   procedure Process_Line (Line : String; State : in out Solver_State)
-   is
+   procedure Process_Line (Line : String; State : in out Solver_State) is
       Mach           : Machine;
       Parse_Ok       : Boolean;
       Min_Presses_P1 : Natural;
@@ -1093,8 +1031,7 @@ is
 
       if Min_Presses_P2 /= Natural'Last then
          if State.Total_Presses_Part_2 <= Natural'Last - Min_Presses_P2 then
-            State.Total_Presses_Part_2 :=
-              State.Total_Presses_Part_2 + Min_Presses_P2;
+            State.Total_Presses_Part_2 := State.Total_Presses_Part_2 + Min_Presses_P2;
          else
             State.Error_Encountered := True;
          end if;
@@ -1103,21 +1040,18 @@ is
       State.Machine_Count := State.Machine_Count + 1;
    end Process_Line;
 
-   procedure Solve_Puzzle (State : in out Solver_State)
-   is
+   procedure Solve_Puzzle (State : in out Solver_State) is
    begin
       --  Processing is done line-by-line, nothing additional needed here
       null;
    end Solve_Puzzle;
 
-   function Result_Part_1 (State : Solver_State) return Natural
-   is
+   function Result_Part_1 (State : Solver_State) return Natural is
    begin
       return State.Total_Presses;
    end Result_Part_1;
 
-   function Result_Part_2 (State : Solver_State) return Natural
-   is
+   function Result_Part_2 (State : Solver_State) return Natural is
    begin
       return State.Total_Presses_Part_2;
    end Result_Part_2;

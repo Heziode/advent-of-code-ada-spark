@@ -10,7 +10,9 @@
 
 pragma Ada_2022;
 
-package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
+package body AoC_2025_Day_11.Solver
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Helper Functions
@@ -60,12 +62,8 @@ package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
 
    --  Find or create a node by name, returns the node index
    procedure Find_Or_Create_Node
-     (State  : in out Solver_State;
-      Name   : Node_Name;
-      Index  : out Node_Index;
-      Found  : out Boolean)
-   with
-     Pre => State.Node_Count < MAX_NODES
+     (State : in out Solver_State; Name : Node_Name; Index : out Node_Index; Found : out Boolean)
+   with Pre => State.Node_Count < MAX_NODES
    is
    begin
       --  Search for existing node
@@ -88,12 +86,7 @@ package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
    end Find_Or_Create_Node;
 
    --  Parse a single word from a string starting at position Pos
-   procedure Parse_Word
-     (Line     : String;
-      Pos      : in out Natural;
-      Word     : out Node_Name;
-      Has_Word : out Boolean)
-   is
+   procedure Parse_Word (Line : String; Pos : in out Natural; Word : out Node_Name; Has_Word : out Boolean) is
       Start_Pos : Natural;
       End_Pos   : Natural;
    begin
@@ -122,10 +115,7 @@ package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
       Start_Pos := Pos;
 
       --  Find end of word
-      while Pos <= Line'Last
-        and then Line (Pos) /= ' '
-        and then Line (Pos) /= ':'
-      loop
+      while Pos <= Line'Last and then Line (Pos) /= ' ' and then Line (Pos) /= ':' loop
          if Pos < Line'Last then
             Pos := Pos + 1;
          else
@@ -168,11 +158,7 @@ package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
    end Skip_Colon;
 
    --  Count paths from a node to the end node using memoization
-   procedure Count_Paths_From
-     (State    : in out Solver_State;
-      Node_Idx : Node_Index;
-      Result   : out Long_Long_Integer)
-   is
+   procedure Count_Paths_From (State : in out Solver_State; Node_Idx : Node_Index; Result : out Long_Long_Integer) is
       Child_Count : Long_Long_Integer;
       Total       : Long_Long_Integer := 0;
    begin
@@ -204,14 +190,11 @@ package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
             pragma Loop_Invariant (I <= Edge_Count);
             if I in State.Nodes (Node_Idx).Edges'Range then
                declare
-                  Child_Idx : constant Node_Index :=
-                    State.Nodes (Node_Idx).Edges (I);
+                  Child_Idx : constant Node_Index := State.Nodes (Node_Idx).Edges (I);
                begin
                   if Child_Idx < State.Node_Count then
                      Count_Paths_From (State, Child_Idx, Child_Count);
-                     if Child_Count >= 0
-                       and then Total <= Long_Long_Integer'Last - Child_Count
-                     then
+                     if Child_Count >= 0 and then Total <= Long_Long_Integer'Last - Child_Count then
                         Total := Total + Child_Count;
                      end if;
                   end if;
@@ -230,11 +213,11 @@ package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
    type State_Memo_Array is array (Node_Index, Visit_State) of Long_Long_Integer;
 
    procedure Count_Paths_With_State
-     (State      : Solver_State;
-      Memo       : in out State_Memo_Array;
-      Node_Idx   : Node_Index;
-      Vis_State  : Visit_State;
-      Result     : out Long_Long_Integer)
+     (State     : Solver_State;
+      Memo      : in out State_Memo_Array;
+      Node_Idx  : Node_Index;
+      Vis_State : Visit_State;
+      Result    : out Long_Long_Integer)
    is
       New_State   : Visit_State := Vis_State;
       Child_Count : Long_Long_Integer;
@@ -280,15 +263,11 @@ package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
             pragma Loop_Invariant (I <= Edge_Count);
             if I in State.Nodes (Node_Idx).Edges'Range then
                declare
-                  Child_Idx : constant Node_Index :=
-                    State.Nodes (Node_Idx).Edges (I);
+                  Child_Idx : constant Node_Index := State.Nodes (Node_Idx).Edges (I);
                begin
                   if Child_Idx < State.Node_Count then
-                     Count_Paths_With_State
-                       (State, Memo, Child_Idx, New_State, Child_Count);
-                     if Child_Count >= 0
-                       and then Total <= Long_Long_Integer'Last - Child_Count
-                     then
+                     Count_Paths_With_State (State, Memo, Child_Idx, New_State, Child_Count);
+                     if Child_Count >= 0 and then Total <= Long_Long_Integer'Last - Child_Count then
                         Total := Total + Child_Count;
                      end if;
                   end if;
@@ -307,22 +286,21 @@ package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
 
    procedure Initialize (State : out Solver_State) is
    begin
-      State := (Part              => AoC_Common.Part_1,
-                Nodes             => [others => (BLANK_NAME, [others => 0], 0, -1)],
-                Node_Count        => 0,
-                Start_Node        => 0,
-                End_Node          => 0,
-                Svr_Node          => 0,
-                Dac_Node          => 0,
-                Fft_Node          => 0,
-                Error_Encountered => False,
-                Result_Part_1     => 0,
-                Result_Part_2     => 0);
+      State :=
+        (Part              => AoC_Common.Part_1,
+         Nodes             => [others => (BLANK_NAME, [others => 0], 0, -1)],
+         Node_Count        => 0,
+         Start_Node        => 0,
+         End_Node          => 0,
+         Svr_Node          => 0,
+         Dac_Node          => 0,
+         Fft_Node          => 0,
+         Error_Encountered => False,
+         Result_Part_1     => 0,
+         Result_Part_2     => 0);
    end Initialize;
 
-   procedure Process_Line (Line : String; State : in out Solver_State)
-   with SPARK_Mode => Off
-   is
+   procedure Process_Line (Line : String; State : in out Solver_State) with SPARK_Mode => Off is
       Source_Name : Node_Name;
       Target_Name : Node_Name;
       Source_Idx  : Node_Index;
@@ -388,10 +366,8 @@ package body AoC_2025_Day_11.Solver with SPARK_Mode => On is
          Check_Special_Node (Target_Name, Target_Idx);
 
          --  Add edge
-         State.Nodes (Source_Idx).Edge_Count :=
-           State.Nodes (Source_Idx).Edge_Count + 1;
-         State.Nodes (Source_Idx).Edges
-           (State.Nodes (Source_Idx).Edge_Count) := Target_Idx;
+         State.Nodes (Source_Idx).Edge_Count := State.Nodes (Source_Idx).Edge_Count + 1;
+         State.Nodes (Source_Idx).Edges (State.Nodes (Source_Idx).Edge_Count) := Target_Idx;
       end loop;
    end Process_Line;
 

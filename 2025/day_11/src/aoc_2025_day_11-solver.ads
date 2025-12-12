@@ -25,14 +25,16 @@ pragma Ada_2022;
 with AoC_Common;
 with AoC_Common.File_IO;
 
-package AoC_2025_Day_11.Solver with SPARK_Mode => On is
+package AoC_2025_Day_11.Solver
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Constants
    ---------------------------------------------------------------------------
 
-   MAX_NODES       : constant := 1000;
-   MAX_EDGES       : constant := 25;
+   MAX_NODES : constant := 1000;
+   MAX_EDGES : constant := 25;
    MAX_NAME_LENGTH : constant := 10;
 
    ---------------------------------------------------------------------------
@@ -48,10 +50,10 @@ package AoC_2025_Day_11.Solver with SPARK_Mode => On is
    type Edge_Array is array (1 .. MAX_EDGES) of Node_Index;
 
    type Node_Entry is record
-      Name        : Node_Name := BLANK_NAME;
-      Edges       : Edge_Array := [others => 0];
-      Edge_Count  : Natural := 0;
-      Path_Count  : Long_Long_Integer := -1;  --  -1 = not computed
+      Name       : Node_Name := BLANK_NAME;
+      Edges      : Edge_Array := [others => 0];
+      Edge_Count : Natural := 0;
+      Path_Count : Long_Long_Integer := -1;  --  -1 = not computed
    end record;
 
    type Graph_Array is array (Node_Index) of Node_Entry;

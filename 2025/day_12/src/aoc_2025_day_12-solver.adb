@@ -10,7 +10,9 @@
 
 pragma Ada_2022;
 
-package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
+package body AoC_2025_Day_12.Solver
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Helper Functions
@@ -26,15 +28,10 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
    with Pre => Is_Digit (C);
 
    --  Parse a natural number from string starting at position Pos
-   procedure Parse_Natural_At
-     (S       : String;
-      Pos     : in out Natural;
-      Value   : out Natural;
-      Success : out Boolean)
-   with
-     Pre => Pos <= S'Last + 1
+   procedure Parse_Natural_At (S : String; Pos : in out Natural; Value : out Natural; Success : out Boolean)
+   with Pre => Pos <= S'Last + 1
    is
-      Result : Natural := 0;
+      Result  : Natural := 0;
       Started : Boolean := False;
    begin
       Value := 0;
@@ -149,9 +146,7 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
          begin
             for J in 0 .. B.Cell_Count - 1 loop
                pragma Loop_Invariant (J < B.Cell_Count);
-               if A.Cells (I).Row = B.Cells (J).Row
-                 and then A.Cells (I).Col = B.Cells (J).Col
-               then
+               if A.Cells (I).Row = B.Cells (J).Row and then A.Cells (I).Col = B.Cells (J).Col then
                   Found := True;
                   exit;
                end if;
@@ -166,9 +161,9 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
 
    --  Generate all unique orientations for a shape
    procedure Generate_Orientations (Shape : in out Shape_Definition) is
-      Base     : constant Shape_Orientation := Shape.Orientations (0);
-      Current  : Shape_Orientation;
-      Flipped  : Shape_Orientation;
+      Base      : constant Shape_Orientation := Shape.Orientations (0);
+      Current   : Shape_Orientation;
+      Flipped   : Shape_Orientation;
       Is_Unique : Boolean;
    begin
       Shape.Orientation_Count := 1;
@@ -218,10 +213,7 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
 
    --  Convert temp grid to shape orientation
    procedure Grid_To_Orientation
-     (Grid   : Placement_Grid;
-      Width  : Natural;
-      Height : Natural;
-      Orient : out Shape_Orientation)
+     (Grid : Placement_Grid; Width : Natural; Height : Natural; Orient : out Shape_Orientation)
    is
       Count : Natural := 0;
    begin
@@ -254,12 +246,8 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
          return;
       end if;
 
-      if State.Current_Shape_Idx < MAX_SHAPES
-        and then State.Temp_Height > 0
-        and then State.Temp_Width > 0
-      then
-         Grid_To_Orientation
-           (State.Temp_Grid, State.Temp_Width, State.Temp_Height, Orient);
+      if State.Current_Shape_Idx < MAX_SHAPES and then State.Temp_Height > 0 and then State.Temp_Width > 0 then
+         Grid_To_Orientation (State.Temp_Grid, State.Temp_Width, State.Temp_Height, Orient);
 
          if Orient.Cell_Count > 0 then
             State.Shapes (State.Current_Shape_Idx).Orientations (0) := Orient;
@@ -310,14 +298,14 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
 
    --  Parse region specification line (e.g., "4x4: 0 0 0 0 2 0")
    procedure Parse_Region_Line (Line : String; State : in out Solver_State) is
-      Pos       : Natural := Line'First;
-      Width_Val : Natural;
+      Pos        : Natural := Line'First;
+      Width_Val  : Natural;
       Height_Val : Natural;
-      Quantity  : Natural;
-      Success   : Boolean;
-      X_Pos     : Natural := 0;
-      Colon_Pos : Natural := 0;
-      Shape_Idx : Natural := 0;
+      Quantity   : Natural;
+      Success    : Boolean;
+      X_Pos      : Natural := 0;
+      Colon_Pos  : Natural := 0;
+      Shape_Idx  : Natural := 0;
    begin
       if State.Region_Count >= MAX_REGIONS then
          return;
@@ -392,8 +380,7 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
       Row    : Natural;
       Col    : Natural;
       Width  : Natural;
-      Height : Natural) return Boolean
-   is
+      Height : Natural) return Boolean is
    begin
       for I in 0 .. Orient.Cell_Count - 1 loop
          pragma Loop_Invariant (I < Orient.Cell_Count);
@@ -401,9 +388,7 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
             Cell_Row : constant Integer := Row + Orient.Cells (I).Row;
             Cell_Col : constant Integer := Col + Orient.Cells (I).Col;
          begin
-            if Cell_Row < 0 or else Cell_Row >= Height
-              or else Cell_Col < 0 or else Cell_Col >= Width
-            then
+            if Cell_Row < 0 or else Cell_Row >= Height or else Cell_Col < 0 or else Cell_Col >= Width then
                return False;
             end if;
             if Grid (Cell_Row) (Cell_Col) then
@@ -415,12 +400,7 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
    end Can_Place;
 
    --  Place a shape on the grid
-   procedure Place_Shape
-     (Grid   : in out Placement_Grid;
-      Orient : Shape_Orientation;
-      Row    : Natural;
-      Col    : Natural)
-   is
+   procedure Place_Shape (Grid : in out Placement_Grid; Orient : Shape_Orientation; Row : Natural; Col : Natural) is
    begin
       for I in 0 .. Orient.Cell_Count - 1 loop
          pragma Loop_Invariant (I < Orient.Cell_Count);
@@ -436,12 +416,7 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
    end Place_Shape;
 
    --  Remove a shape from the grid
-   procedure Remove_Shape
-     (Grid   : in out Placement_Grid;
-      Orient : Shape_Orientation;
-      Row    : Natural;
-      Col    : Natural)
-   is
+   procedure Remove_Shape (Grid : in out Placement_Grid; Orient : Shape_Orientation; Row : Natural; Col : Natural) is
    begin
       for I in 0 .. Orient.Cell_Count - 1 loop
          pragma Loop_Invariant (I < Orient.Cell_Count);
@@ -506,8 +481,7 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
                for Orient_Idx in 0 .. Shape.Orientation_Count - 1 loop
                   pragma Loop_Invariant (Orient_Idx < Shape.Orientation_Count);
                   declare
-                     Orient : Shape_Orientation renames
-                       Shape.Orientations (Orient_Idx);
+                     Orient : Shape_Orientation renames Shape.Orientations (Orient_Idx);
                   begin
                      --  Try each position
                      for Row in 0 .. Height - 1 loop
@@ -517,15 +491,11 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
                            pragma Loop_Invariant (Col < Width);
                            exit when Col + Orient.Width > Width;
 
-                           if Can_Place (Grid, Orient, Row, Col, Width, Height)
-                           then
+                           if Can_Place (Grid, Orient, Row, Col, Width, Height) then
                               Place_Shape (Grid, Orient, Row, Col);
-                              Pieces (Piece_Idx).Remaining :=
-                                Pieces (Piece_Idx).Remaining - 1;
+                              Pieces (Piece_Idx).Remaining := Pieces (Piece_Idx).Remaining - 1;
 
-                              Solve_Backtrack
-                                (Shapes, Grid, Pieces, Width, Height,
-                                 Recursive_Success);
+                              Solve_Backtrack (Shapes, Grid, Pieces, Width, Height, Recursive_Success);
                               if Recursive_Success then
                                  Success := True;
                                  return;
@@ -533,8 +503,7 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
 
                               --  Backtrack
                               Remove_Shape (Grid, Orient, Row, Col);
-                              Pieces (Piece_Idx).Remaining :=
-                                Pieces (Piece_Idx).Remaining + 1;
+                              Pieces (Piece_Idx).Remaining := Pieces (Piece_Idx).Remaining + 1;
                            end if;
                         end loop;
                      end loop;
@@ -550,32 +519,26 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
    end Solve_Backtrack;
 
    --  Check if a region can fit all its pieces
-   function Can_Fit_Region
-     (Shapes : Shape_Array;
-      Region : Region_Spec) return Boolean
-   is
-      Total_Cells  : Natural := 0;
-      Region_Area  : constant Natural := Region.Width * Region.Height;
-      Grid         : Placement_Grid := [others => [others => False]];
-      Pieces       : Piece_List := [others => (0, 0)];
-      Piece_Count  : Natural := 0;
-      Fit_Success  : Boolean;
+   function Can_Fit_Region (Shapes : Shape_Array; Region : Region_Spec) return Boolean is
+      Total_Cells : Natural := 0;
+      Region_Area : constant Natural := Region.Width * Region.Height;
+      Grid        : Placement_Grid := [others => [others => False]];
+      Pieces      : Piece_List := [others => (0, 0)];
+      Piece_Count : Natural := 0;
+      Fit_Success : Boolean;
    begin
       --  Calculate total cells needed and build piece list
       for I in Region.Quantities'Range loop
          if Region.Quantities (I) > 0 then
             declare
-               Shape_Cells : constant Natural :=
-                 Shapes (I).Orientations (0).Cell_Count;
+               Shape_Cells : constant Natural := Shapes (I).Orientations (0).Cell_Count;
             begin
-               if Total_Cells <= Natural'Last - Region.Quantities (I) * Shape_Cells
-               then
+               if Total_Cells <= Natural'Last - Region.Quantities (I) * Shape_Cells then
                   Total_Cells := Total_Cells + Region.Quantities (I) * Shape_Cells;
                end if;
 
                if Piece_Count < MAX_PIECE_TYPES then
-                  Pieces (Piece_Count) := (Shape_Idx => I,
-                                           Remaining => Region.Quantities (I));
+                  Pieces (Piece_Count) := (Shape_Idx => I, Remaining => Region.Quantities (I));
                   Piece_Count := Piece_Count + 1;
                end if;
             end;
@@ -593,8 +556,7 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
       end if;
 
       --  Use backtracking to verify actual placement
-      Solve_Backtrack
-        (Shapes, Grid, Pieces, Region.Width, Region.Height, Fit_Success);
+      Solve_Backtrack (Shapes, Grid, Pieces, Region.Width, Region.Height, Fit_Success);
       return Fit_Success;
    end Can_Fit_Region;
 
@@ -604,19 +566,20 @@ package body AoC_2025_Day_12.Solver with SPARK_Mode => On is
 
    procedure Initialize (State : out Solver_State) is
    begin
-      State := (Part              => AoC_Common.Part_1,
-                Shapes            => [others => (others => <>)],
-                Shape_Count       => 0,
-                Regions           => [others => (others => <>)],
-                Region_Count      => 0,
-                Parsing_Shape     => False,
-                Current_Shape_Idx => 0,
-                Current_Shape_Row => 0,
-                Temp_Grid         => [others => [others => False]],
-                Temp_Width        => 0,
-                Temp_Height       => 0,
-                Result_Part_1     => 0,
-                Result_Part_2     => 0);
+      State :=
+        (Part              => AoC_Common.Part_1,
+         Shapes            => [others => (others => <>)],
+         Shape_Count       => 0,
+         Regions           => [others => (others => <>)],
+         Region_Count      => 0,
+         Parsing_Shape     => False,
+         Current_Shape_Idx => 0,
+         Current_Shape_Row => 0,
+         Temp_Grid         => [others => [others => False]],
+         Temp_Width        => 0,
+         Temp_Height       => 0,
+         Result_Part_1     => 0,
+         Result_Part_2     => 0);
    end Initialize;
 
    procedure Process_Line (Line : String; State : in out Solver_State) is

@@ -75,11 +75,11 @@ is
 
    --  Machine definition parsed from input
    type Machine is record
-      Light_Count   : Natural := 0;                    --  Number of lights/counters
-      Button_Count  : Natural := 0;                    --  Number of buttons
-      Target        : Light_Vector := [others => 0];   --  Target light state (Part 1)
-      Joltage       : Joltage_Array := [others => 0];  --  Target joltage (Part 2)
-      Buttons       : Button_Array := [others => [others => 0]];  --  Button masks
+      Light_Count  : Natural := 0;                    --  Number of lights/counters
+      Button_Count : Natural := 0;                    --  Number of buttons
+      Target       : Light_Vector := [others => 0];   --  Target light state (Part 1)
+      Joltage      : Joltage_Array := [others => 0];  --  Target joltage (Part 2)
+      Buttons      : Button_Array := [others => [others => 0]];  --  Button masks
    end record;
 
    --  Solver state that accumulates input data and results

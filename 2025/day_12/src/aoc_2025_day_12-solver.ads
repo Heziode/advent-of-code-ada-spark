@@ -28,19 +28,21 @@ pragma Ada_2022;
 with AoC_Common;
 with AoC_Common.File_IO;
 
-package AoC_2025_Day_12.Solver with SPARK_Mode => On is
+package AoC_2025_Day_12.Solver
+  with SPARK_Mode => On
+is
 
    ---------------------------------------------------------------------------
    --  Constants
    ---------------------------------------------------------------------------
 
-   MAX_SHAPES         : constant := 20;
-   MAX_SHAPE_SIZE     : constant := 10;
+   MAX_SHAPES : constant := 20;
+   MAX_SHAPE_SIZE : constant := 10;
    MAX_CELLS_PER_SHAPE : constant := MAX_SHAPE_SIZE * MAX_SHAPE_SIZE;
-   MAX_ORIENTATIONS   : constant := 8;
-   MAX_REGIONS        : constant := 1100;
-   MAX_REGION_WIDTH   : constant := 100;
-   MAX_REGION_HEIGHT  : constant := 100;
+   MAX_ORIENTATIONS : constant := 8;
+   MAX_REGIONS : constant := 1100;
+   MAX_REGION_WIDTH : constant := 100;
+   MAX_REGION_HEIGHT : constant := 100;
    MAX_PIECES_PER_SHAPE : constant := 100;
 
    ---------------------------------------------------------------------------
@@ -72,8 +74,8 @@ package AoC_2025_Day_12.Solver with SPARK_Mode => On is
    type Orientation_Array is array (Orientation_Index) of Shape_Orientation;
 
    type Shape_Definition is record
-      Orientations       : Orientation_Array;
-      Orientation_Count  : Natural := 0;
+      Orientations      : Orientation_Array;
+      Orientation_Count : Natural := 0;
    end record;
 
    type Shape_Array is array (Shape_Index) of Shape_Definition;
@@ -118,8 +120,7 @@ package AoC_2025_Day_12.Solver with SPARK_Mode => On is
 
    --  Check state invariant
    function State_Invariant (State : Solver_State) return Boolean
-   is (State.Shape_Count <= MAX_SHAPES
-       and then State.Region_Count <= MAX_REGIONS);
+   is (State.Shape_Count <= MAX_SHAPES and then State.Region_Count <= MAX_REGIONS);
 
    --  Initialize solver state
    procedure Initialize (State : out Solver_State);
